@@ -4,7 +4,7 @@ const {User, Information} = require("../models/userModel");
 const UserController = {
     getUsers : async (req, res) => {
         try{
-            const user = await User.find({});
+            const user = await User.find({}).populate("information");
             return res.status(200).json(user);
         }catch (err){
             console.log("Lấy dữ liệu người dùng thất bại"+err.message);
@@ -56,7 +56,6 @@ const UserController = {
         try{
             const {name,avatar,information} = req.body;
             let user = await User.findOne({email:email});
-
         }
         catch (e){
             console.log("cập nhập người dùng thất bại")
