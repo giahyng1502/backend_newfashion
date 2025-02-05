@@ -8,16 +8,24 @@ const voucherSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    limit : {
+        type: Number,
+        required: true,
+        default: 1,
+        min : 0
+    },
     startDate : {
         type: Date,
         required: true,
         default: Date.now,
     },
-    endDate : {
-      type: Date,
-      required: true,
-      default: () => Date.now() + 7 * 24 * 60 * 60 * 1000
+    endDate: {
+        type: Date,
+        required: true,
+        default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // Cộng chính xác 7 ngày (tính theo giây)
     },
+
+
     discount: {
         type: Number,
         required: true,

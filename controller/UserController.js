@@ -13,25 +13,27 @@ const UserController = {
 
         }
     },
-    register : async (req, res) => {
-        try{
-            const {name, email, password} = req.body;
-            let user = await User.findOne({email:email});
-            if(!user){
-                const hashPass = await bcrypt.hash(password,12);
+    register: async (req, res) => {
+        try {
+            const { name, email, password } = req.body;
+            const normalizedEmail = email.toLowerCase(); // Chuyển email thành chữ thường
 
-                user = new User({name, email, password : hashPass});
+            let user = await User.findOne({ email: normalizedEmail });
+            if (!user) {
+                const hashPass = await bcrypt.hash(password, 12);
+
+                user = new User({ name, email: normalizedEmail, password: hashPass });
                 const saveUser = await user.save();
-                return res.status(200).json({message : 'Đăng ký tài khoản thành công',data : saveUser});
+                return res.status(200).json({ message: 'Đăng ký tài khoản thành công', data: saveUser });
             }
-            return res.status(404).json({message : 'Email này đã tồn tại trên hệ thống'});
+            return res.status(400).json({ message: 'Email này đã tồn tại trên hệ thống' });
 
-        }catch (err) {
-            console.log("Tạo tài khoản thất bại "+ err.message);
-            return res.status(500).json({message : "Lỗi sever" ,error : err.message});
-
+        } catch (err) {
+            console.log("Tạo tài khoản thất bại " + err.message);
+            return res.status(500).json({ message: "Lỗi server", error: err.message });
         }
     },
+
     login : async (req, res) => {
         try{
             const {email,password} = req.body;

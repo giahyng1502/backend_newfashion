@@ -7,13 +7,18 @@ const cartController = {
     // Lấy giỏ hàng của user
     getCart: async (req, res) => {
         try {
-            const userId = req.user._id;
-            let cart = await Cart.findOne({ userId }).populate("products.productId");
+            const userId = req.user.userId;
+            console.log(userId);
+            if (!userId) {
+                return res.status(401).json({message : 'Người dùng không tồn tại'})
+            }
+            let cart = await Cart.findOne({ userId: userId }).populate("products.productId");
 
             if (!cart) {
                 cart = new Cart({ userId, products: [], totalPrice: 0 });
                 await cart.save();
             }
+
 
             return res.json({message : 'Lấy dữ liệu trong giỏ hàng thành công ', data : cart});
         } catch (e) {
@@ -25,7 +30,7 @@ const cartController = {
     // Thêm sản phẩm vào giỏ hàng
     addToCart: async (req, res) => {
         try {
-            const userId = req.user._id;
+            const userId = req.user.userId;
             const { productId, quantity } = req.body;
 
             let cart = await Cart.findOne({ userId });
@@ -63,7 +68,7 @@ const cartController = {
     //  Cập nhật số lượng sản phẩm trong giỏ hàng
     updateCart: async (req, res) => {
         try {
-            const userId = req.user._id;
+            const userId = req.user.userId;
             const productId = req.body.productId;
             const quantity = req.body.quantity;
 
@@ -94,7 +99,7 @@ const cartController = {
     // Xóa sản phẩm khỏi giỏ hàng
     removeFromCart: async (req, res) => {
         try {
-            const userId = req.user._id;
+            const userId = req.user.userId;
             const { productId } = req.body;
 
             let cart = await Cart.findOne({ userId });

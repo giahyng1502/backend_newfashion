@@ -4,15 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Hoàn thiện chức năng thêm sửa xóa sản phẩm trong giỏ hàng">
-      <change afterPath="$PROJECT_DIR$/controller/voucherController.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/vorcherModel.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/routes/voucher.js" afterDir="false" />
+    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Hoàn thiện chức năng thêm sửa xóa voucher">
+      <change afterPath="$PROJECT_DIR$/controller/orderController.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/orderVoucher.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/order.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/ReviewController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/ReviewController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/UserController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/UserController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/productController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/productController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/cartController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/cartController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/voucherController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/voucherController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/cartModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/cartModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/userModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/userModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/vorcherModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/voucherModel.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,7 +82,7 @@
       <option name="presentableId" value="Default" />
       <updated>1738656880908</updated>
       <workItem from="1738656882569" duration="22389000" />
-      <workItem from="1738717747580" duration="2806000" />
+      <workItem from="1738717747580" duration="14391000" />
     </task>
     <task id="LOCAL-00001" summary="Hoàn thiện chức năng thêm , cập nhập sản phẩm , và review sản phẩm">
       <option name="closed" value="true" />
@@ -98,7 +100,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738678528700</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Hoàn thiện chức năng thêm sửa xóa voucher">
+      <option name="closed" value="true" />
+      <created>1738720923928</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1738720923928</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -107,6 +117,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Hoàn thiện chức năng thêm , cập nhập sản phẩm , và review sản phẩm" />
     <MESSAGE value="Hoàn thiện chức năng thêm sửa xóa sản phẩm trong giỏ hàng" />
-    <option name="LAST_COMMIT_MESSAGE" value="Hoàn thiện chức năng thêm sửa xóa sản phẩm trong giỏ hàng" />
+    <MESSAGE value="Hoàn thiện chức năng thêm sửa xóa voucher" />
+    <option name="LAST_COMMIT_MESSAGE" value="Hoàn thiện chức năng thêm sửa xóa voucher" />
   </component>
 </project>
