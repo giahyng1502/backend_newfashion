@@ -25,9 +25,10 @@ const reviewController = {
             );
 
             if (!product) {
-                return res.status(404).json("sản phẩm không tồn tại");
+                return res.status(404).json({message :'sản phẩm không tồn tại'});
             }
-            return res.status(200).json(review);
+            return res.status(200).json({message : 'Lấy review thành công',data: review});
+
         } catch (e) {
             console.error("Thêm đánh giá thất bại: " + e.message);
             return res.status(500).json({ message: "Lỗi server", error: e.message });
@@ -55,7 +56,8 @@ const reviewController = {
                 { new: true }
             );
 
-            return res.status(200).json("Xóa review thành công");
+            return res.status(200).json({message : 'Xóa review thành công',data: review});
+
 
         } catch (e) {
             console.error("Xóa review sản phẩm thất bại: " + e.message);

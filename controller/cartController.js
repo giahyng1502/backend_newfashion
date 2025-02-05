@@ -15,7 +15,7 @@ const cartController = {
                 await cart.save();
             }
 
-            return res.json(cart);
+            return res.json({message : 'Lấy dữ liệu trong giỏ hàng thành công ', data : cart});
         } catch (e) {
             console.error("Lấy giỏ hàng thất bại: " + e.message);
             return res.status(500).json({ message: "Lỗi server", error: e.message });

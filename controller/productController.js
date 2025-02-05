@@ -3,7 +3,7 @@ const productController = {
     getAll: async (req, res) => {
         try {
             const products = await Product.find();
-            res.status(200).json(products);
+            return res.status(200).json({message : 'Lấy sản phẩm thành công',data: products});
         } catch (e) {
             console.error("lấy dữ liệu sản phẩm thất bại: " + e.message);
             return res.status(500).json({message: "Lỗi server", error: e.message});
@@ -13,7 +13,8 @@ const productController = {
         try {
             const productId = req.params.productId;
             const product = await Product.findById(productId).populate("reviews")
-            return res.status(200).json(product);
+            return res.status(200).json({message : 'Lấy chi tiết sản phẩm thành công',data: product});
+
         } catch (e) {
             console.error("lấy dữ liệu sản phẩm thất bại: " + e.message);
             return res.status(500).json({message: "Lỗi server", error: e.message});
@@ -23,7 +24,8 @@ const productController = {
         try {
             const product = new Product(req.body);
             await product.save();
-            return res.status(200).json(product);
+            return res.status(200).json({message : 'Thêm sản phẩm thành công',data: product});
+
         } catch (e) {
             console.error("Thêm sản phẩm thất bại: " + e.message);
             return res.status(500).json({message: "Lỗi server", error: e.message});
@@ -41,7 +43,8 @@ const productController = {
             if (!updatedProduct) {
                 return res.status(404).json({message: "Không tìm thấy sản phẩm"});
             }
-            return res.status(200).json(updatedProduct);
+            return res.status(200).json({message : 'Sửa sản phẩm thành công',data: updatedProduct});
+
 
         } catch (e) {
             console.error("Cập nhật sản phẩm thất bại: " + e.message);
