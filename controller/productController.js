@@ -11,8 +11,14 @@ const productController = {
     },
     getOne: async (req, res) => {
         try {
-            const productId = req.params.productId;
-            const product = await Product.findById(productId).populate("reviews")
+            const productId = req.params.productId;const product = await Product.findById(productId)
+                .populate({
+                    path: 'reviews',
+                    populate: {
+                        path: 'userId', // Đây là trường cần populate từ review
+                        select: 'name avatar'
+                    }
+                });
             return res.status(200).json({message : 'Lấy chi tiết sản phẩm thành công',data: product});
 
         } catch (e) {

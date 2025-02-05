@@ -1,7 +1,7 @@
 const { User } = require("../models/userModel");
 const Cart = require("../models/cartModel");
 const Voucher = require("../models/voucherModel");
-const Order = require("../models/orderVoucher");
+const Order = require("../models/orderModel");
 
 const orderController = {
     create: async (req, res) => {
@@ -61,12 +61,23 @@ const orderController = {
                 }
                 await user.save();
             }
-
+            const items = cart.products.map(item => ({
+                productName : item.productId.name,
+                price : item.productId.price * item.quantity,
+                size : item.size,
+                color : item.color,
+                quantity : item.quantity
+            }));
+            console.log(items);
+            console.log(cart.products);
             // Tạo đơn hàng
             const order = new Order({
                 userId: userId,
-                item: cart.products,
+                item: items,
                 totalPrice: totalPrice,
+                statusHistory : {
+                    updatedBy : userId
+                },
                 voucherId: voucherId || null, // Chỉ gửi voucherId nếu có
                 point: point || null,
                 shippingAddress: { address, phoneNumber }
@@ -89,7 +100,7 @@ const orderController = {
     getAll: async (req, res) => {
         try {
             const orders = await Order.find();
-            return res.status(200).json({ message: 'Lấy thông tin đơn hàng thành công', orders });
+            return res.status(200).json({ message: 'Lấy thông tin đơn hàng thành công', data : orders });
         } catch (e) {
             console.error("Lấy đơn hàng thất bại: " + e.message);
             return res.status(500).json({
@@ -101,7 +112,9 @@ const orderController = {
     getOrderById: async (req, res) => {
         try{
             const userId = req.user.userId;
-            const order = await Order.findOne({ userId: userId });
+            const order = await Order.findOne({ userId: userId })
+                .populate("statusHistory.updatedBy",'name')
+                .sort({"statusHistory.timestamp" : -1});
             if (!order) {
                 return res.status(200).json({message:'Bạn chưa có đơn hàng nào'});
             }
@@ -116,13 +129,21 @@ const orderController = {
             const orderId = req.params.orderId;
             const userId = req.user.userId;
             const order = await Order.findById(orderId);
+            if (!order) {
+                return res.status(404).json({message:'Đơn hàng này không tồn tại'})
+            }
                 if (order.status !== 0) {
                     return res.status(400).json({message :'Bạn chỉ có thể hủy đơn hàng khi đơn hàng đang ở trong trạng thái chờ xác nhận'});
                 }
                 if (userId.toString() !== order.userId.toString()) {
                     return res.status(400).json({message :'Bạn không có quyền hủy'});
                 }
-            order.status = 4;
+
+                order.status = 4;
+                order.statusHistory.push({
+                    status : 4,
+                    updatedBy : userId,
+                })
             await order.save();
             return res.status(200).json({message : 'Hủy đơn hàng thành công', data : order})
         }catch (e) {
@@ -134,8 +155,20 @@ const orderController = {
         try{
             const orderId = req.params.orderId;
             const status = req.body.status;
-            const orderStatus = await Order.findByIdAndUpdate(orderId, {status : status}, { new: true });
-
+            const admin = req.user.userId;
+            const orderStatus = await Order.findById(orderId);
+            if (!orderStatus) {
+                return res.status(200).json({message : 'Đơn hàng không tồn tại'})
+            }
+            if (orderStatus.status === status) {
+                return res.status(200).json({message : 'Vui lòng thay đổi trạng thái đơn hàng'})
+            }
+            orderStatus.status = status;
+            orderStatus.statusHistory.push({
+                status : status,
+                updatedBy : admin,
+            })
+            orderStatus.save();
             return res.status(200).json({message : 'Cập nhập đơn hàng thành công', data : orderStatus})
         }catch (e) {
             console.log("Lỗi xẩy ra khi cập nhập trạng thái đơn hàng"+e.message);
