@@ -1,40 +1,5 @@
 const mongoose = require("mongoose");
 
-const reviewSchema = mongoose.Schema({
-    images : {
-        type: [String],
-        default: [],
-    },
-    content : {
-        type: String,
-    },
-    userId : {
-        type: mongoose.Schema.ObjectId,
-        ref : "User",
-    },
-    rate : {
-        type: Number,
-        min : 0,
-        max : 5,
-        default: 0,
-        required : true,
-    },
-    reviewDate : {
-        type: Date,
-        default: Date.now,
-    }
-});
-const categorySchema = mongoose.Schema({
-   image : {
-       type: String,
-       required: true,
-   },
-    categoryName : {
-       type: String,
-        required: true,
-    }
-});
-
 const productSchema = mongoose.Schema({
     name : {
         type: String,
@@ -74,9 +39,9 @@ const productSchema = mongoose.Schema({
     category : {
         type: mongoose.Schema.ObjectId,
         ref: 'Category',
-    }
-})
-const Review = mongoose.model('Review', reviewSchema);
-const Category = mongoose.model('Category', categorySchema);
+    },
+});
+
 const Product = mongoose.model('Product', productSchema);
-module.exports = {Review, Category, Product };
+
+module.exports = { Product };

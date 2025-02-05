@@ -1,4 +1,5 @@
 const {Product} = require("../models/productModel");
+const SaleProduct = require("../models/SaleProduct");
 const productController = {
     getAll: async (req, res) => {
         try {
@@ -26,7 +27,7 @@ const productController = {
             return res.status(500).json({message: "Lỗi server", error: e.message});
         }
     },
-    AddProduct: async (req, res) => {
+    addProduct: async (req, res) => {
         try {
             const product = new Product(req.body);
             await product.save();
@@ -56,7 +57,7 @@ const productController = {
             console.error("Cập nhật sản phẩm thất bại: " + e.message);
             return res.status(500).json({message: "Lỗi server", error: e.message});
         }
-    }
+    },
 }
 
 module.exports = productController;

@@ -4,13 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="hoàn thiện chức CRUD bài post , hoàn thành chức năng bình luận và like bài viết">
+    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Cập nhập lại model cho phép lưu trữ lịch sử giao dịch và lịch sử xác nhận đơn hàng">
+      <change afterPath="$PROJECT_DIR$/controller/saleProductControler.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/SaleProduct.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/saleProduct.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/cartController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/cartController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/orderController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/orderController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/productController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/productController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/cartModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/cartModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/orderVoucher.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/orderModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/productModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/productModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/userModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/userModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/product.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/product.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -79,7 +85,7 @@
       <option name="presentableId" value="Default" />
       <updated>1738656880908</updated>
       <workItem from="1738656882569" duration="22389000" />
-      <workItem from="1738717747580" duration="27546000" />
+      <workItem from="1738717747580" duration="32449000" />
     </task>
     <task id="LOCAL-00001" summary="Hoàn thiện chức năng thêm , cập nhập sản phẩm , và review sản phẩm">
       <option name="closed" value="true" />
@@ -121,7 +127,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738746433804</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Cập nhập lại model cho phép lưu trữ lịch sử giao dịch và lịch sử xác nhận đơn hàng">
+      <option name="closed" value="true" />
+      <created>1738752756891</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1738752756891</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -133,6 +147,7 @@
     <MESSAGE value="Hoàn thiện chức năng thêm sửa xóa voucher" />
     <MESSAGE value="Hoàn thiện chức năng thêm sửa hủy đơn hàng và tìm kiếm đơn hàng theo id người dùng , Xử lý giảm tiền voucher , point" />
     <MESSAGE value="hoàn thiện chức CRUD bài post , hoàn thành chức năng bình luận và like bài viết" />
-    <option name="LAST_COMMIT_MESSAGE" value="hoàn thiện chức CRUD bài post , hoàn thành chức năng bình luận và like bài viết" />
+    <MESSAGE value="Cập nhập lại model cho phép lưu trữ lịch sử giao dịch và lịch sử xác nhận đơn hàng" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cập nhập lại model cho phép lưu trữ lịch sử giao dịch và lịch sử xác nhận đơn hàng" />
   </component>
 </project>

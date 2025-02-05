@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     information: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: [mongoose.Schema.Types.ObjectId],
         ref: 'Information'
     },
     avatar: {
