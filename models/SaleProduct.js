@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const saleProductSchema = mongoose.Schema({
+const saleProductSchema = new mongoose.Schema({
     productId: {
         type: mongoose.Schema.ObjectId,
         ref: 'Product',
@@ -10,18 +10,21 @@ const saleProductSchema = mongoose.Schema({
         type: Number,
         required: true,
         min: 0,
-        max: 100, // Giảm giá trong khoảng từ 0% đến 100%
+        max: 100,
     },
-    remainDate: {
+    expireAt: {
         type: Date,
-        required: true,
-        default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // Cộng chính xác 7 ngày (tính theo giây)
+        required: true
     },
     createdAt: {
         type: Date,
-        default: Date.now,
-    },
+        default: Date.now
+    }
 });
+
+// Tạo TTL Index trên `expireAt`
+// MongoDB sẽ tự động xóa các document sau thời gian `expireAt`
+saleProductSchema.index({ expireAt: 1 }, { expireAfterSeconds: 0 });
 
 const SaleProduct = mongoose.model('SaleProduct', saleProductSchema);
 

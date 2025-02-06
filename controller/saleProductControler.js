@@ -1,26 +1,11 @@
-const cron = require('node-cron');
 const SaleProduct = require("../models/SaleProduct");
 const {Product} = require("../models/productModel");
-
-// Tạo cron job để tự động xóa giảm giá hết hạn
-cron.schedule('0 0 * * *', async () => {  // Cron job chạy mỗi ngày vào lúc 00:00
-    try {
-        // Xóa các bản ghi giảm giá hết hạn
-        const expiredDiscounts = await SaleProduct.deleteMany({
-            remainDate: { $lt: Date.now() } // Điều kiện để xóa là remainDate nhỏ hơn thời gian hiện tại
-        });
-
-        console.log(`Đã xóa ${expiredDiscounts.deletedCount} giảm giá hết hạn.`);
-    } catch (e) {
-        console.error("Lỗi khi xóa giảm giá hết hạn: " + e.message);
-    }
-});
 
 const saleProductController = {
     // Thêm sản phẩm giảm giá
     addSaleProduct: async (req, res) => {
         try {
-            const { productId, discount, remainDate } = req.body;
+            const { productId, discount, expireAt } = req.body;
 
             // Kiểm tra xem sản phẩm có tồn tại không
             const product = await Product.findById(productId);
@@ -35,10 +20,11 @@ const saleProductController = {
             }
 
             // Thêm sản phẩm vào SaleProduct
+            const remainDate = new Date(Date.now() + expireAt * 60 * 60 * 1000)
             const saleProduct = new SaleProduct({
                 productId,
                 discount,
-                remainDate,
+                expireAt : remainDate,
             });
 
             await saleProduct.save();
@@ -53,7 +39,7 @@ const saleProductController = {
     updateSaleProduct: async (req, res) => {
         try {
             const saleProductId = req.params.saleProductId;
-            const { discount, remainDate } = req.body;
+            const { discount, expireAt } = req.body;
 
             const saleProduct = await SaleProduct.findById(saleProductId);
             if (!saleProduct) {
@@ -61,8 +47,10 @@ const saleProductController = {
             }
 
             // Cập nhật thông tin giảm giá
+            const remainDate = new Date(Date.now() + expireAt * 60 * 60 * 1000)
+
             if (discount !== undefined) saleProduct.discount = discount;
-            if (remainDate !== undefined) saleProduct.remainDate = remainDate;
+            if (expireAt !== undefined) saleProduct.expireAt = remainDate;
 
             await saleProduct.save();
             return res.status(200).json({ message: "Cập nhật giảm giá thành công", data: saleProduct });

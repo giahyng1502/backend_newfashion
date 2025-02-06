@@ -4,18 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="hoàn thiện chức năng CRUD category">
-      <change afterPath="$PROJECT_DIR$/controller/authController.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/otpModel.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/routes/authRouter.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/routes/mailRouter.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service/emailService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="hoàn thiện chức năng gửi tin nhắn về mail khi người dùng mua hàng và thêm chức năng quên mật khẩu bằng mail code">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/cartController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/cartController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/saleProductControler.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/saleProductControler.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/SaleProduct.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/SaleProduct.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +76,7 @@
       <option name="presentableId" value="Default" />
       <updated>1738656880908</updated>
       <workItem from="1738656882569" duration="22389000" />
-      <workItem from="1738717747580" duration="39675000" />
+      <workItem from="1738717747580" duration="41965000" />
     </task>
     <task id="LOCAL-00001" summary="Hoàn thiện chức năng thêm , cập nhập sản phẩm , và review sản phẩm">
       <option name="closed" value="true" />
@@ -149,7 +142,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738758540207</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="hoàn thiện chức năng gửi tin nhắn về mail khi người dùng mua hàng và thêm chức năng quên mật khẩu bằng mail code">
+      <option name="closed" value="true" />
+      <created>1738769801854</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1738769801854</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -164,6 +165,7 @@
     <MESSAGE value="Cập nhập lại model cho phép lưu trữ lịch sử giao dịch và lịch sử xác nhận đơn hàng" />
     <MESSAGE value="hoàn thiện chức năng thêm sản phẩm giảm giá , cải thiện chức năng order khi người dùng mua hàng đang trong thời gian giảm giá" />
     <MESSAGE value="hoàn thiện chức năng CRUD category" />
-    <option name="LAST_COMMIT_MESSAGE" value="hoàn thiện chức năng CRUD category" />
+    <MESSAGE value="hoàn thiện chức năng gửi tin nhắn về mail khi người dùng mua hàng và thêm chức năng quên mật khẩu bằng mail code" />
+    <option name="LAST_COMMIT_MESSAGE" value="hoàn thiện chức năng gửi tin nhắn về mail khi người dùng mua hàng và thêm chức năng quên mật khẩu bằng mail code" />
   </component>
 </project>

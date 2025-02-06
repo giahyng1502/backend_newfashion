@@ -1,7 +1,5 @@
-const { User } = require("../models/userModel");
 const { Product } = require("../models/productModel");
 const Cart = require("../models/cartModel");
-const {log} = require("debug");
 
 const cartController = {
     // Lấy giỏ hàng của user
@@ -57,7 +55,7 @@ const cartController = {
 
             // Cập nhật tổng tiền
             cart.total = await calculateTotalPrice(cart.products);
-            log(cart.total)
+
             await cart.save();
             return res.status(200).json({ message: "Thêm vào giỏ hàng thành công", cart });
         } catch (e) {
