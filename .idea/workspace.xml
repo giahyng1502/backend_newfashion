@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="hoàn thiện chức năng gửi tin nhắn về mail khi người dùng mua hàng và thêm chức năng quên mật khẩu bằng mail code">
+    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Hoàn thiện chức năng thanh toán bằng momo lấy link thanh toán và thanh toán và check trạng thái thanh toán">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/cartController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/cartController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/saleProductControler.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/saleProductControler.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/SaleProduct.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/SaleProduct.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/middleware/AuthMiddle.js" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/AuthMiddle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,20 +49,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.3.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.3.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -76,7 +79,9 @@
       <option name="presentableId" value="Default" />
       <updated>1738656880908</updated>
       <workItem from="1738656882569" duration="22389000" />
-      <workItem from="1738717747580" duration="41965000" />
+      <workItem from="1738717747580" duration="44053000" />
+      <workItem from="1738827313070" duration="1176000" />
+      <workItem from="1738900495891" duration="302000" />
     </task>
     <task id="LOCAL-00001" summary="Hoàn thiện chức năng thêm , cập nhập sản phẩm , và review sản phẩm">
       <option name="closed" value="true" />
@@ -150,7 +155,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738769801854</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Cập nhập chức năng khi sản phẩm hết thời gian khuyến mãi sẽ tự xóa khỏi list SaleProduct">
+      <option name="closed" value="true" />
+      <created>1738809322283</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1738809322283</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -166,6 +179,8 @@
     <MESSAGE value="hoàn thiện chức năng thêm sản phẩm giảm giá , cải thiện chức năng order khi người dùng mua hàng đang trong thời gian giảm giá" />
     <MESSAGE value="hoàn thiện chức năng CRUD category" />
     <MESSAGE value="hoàn thiện chức năng gửi tin nhắn về mail khi người dùng mua hàng và thêm chức năng quên mật khẩu bằng mail code" />
-    <option name="LAST_COMMIT_MESSAGE" value="hoàn thiện chức năng gửi tin nhắn về mail khi người dùng mua hàng và thêm chức năng quên mật khẩu bằng mail code" />
+    <MESSAGE value="Cập nhập chức năng khi sản phẩm hết thời gian khuyến mãi sẽ tự xóa khỏi list SaleProduct" />
+    <MESSAGE value="Hoàn thiện chức năng thanh toán bằng momo lấy link thanh toán và thanh toán và check trạng thái thanh toán" />
+    <option name="LAST_COMMIT_MESSAGE" value="Hoàn thiện chức năng thanh toán bằng momo lấy link thanh toán và thanh toán và check trạng thái thanh toán" />
   </component>
 </project>

@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 
 const userMiddle = async (req, res, next) => {
     const token = req.header("Authorization");
-    console.log(token);
     if (!token) {
         return res.status(401).json("Vui lòng đăng nhập để thực hiện chức năng này");
     }
