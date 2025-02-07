@@ -15,6 +15,7 @@ var categoryRouter = require("./routes/category");
 var emailRouter = require("./routes/mailRouter");
 var authRouter = require("./routes/authRouter");
 var momoRouter = require("./routes/momoRouter");
+var cloudRouter = require("./routes/cloudeRouter");
 
 var app = express();
 var db = require("./models/db");
@@ -40,6 +41,7 @@ app.use("/category", categoryRouter);
 app.use("/mail", emailRouter);
 app.use("/auth", authRouter);
 app.use("/momo", momoRouter);
+app.use("/upload", cloudRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
