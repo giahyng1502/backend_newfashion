@@ -1,5 +1,5 @@
 const express = require('express');
-const { sendMail } = require('../service/emailService'); // ✅ Import đúng
+const { sendMail } = require('../service/emailService');
 
 const router = express.Router();
 
@@ -13,5 +13,4 @@ router.post('/send-email', async (req, res) => {
         res.status(500).json({ error: 'Gửi email thất bại' });
     }
 });
-
 module.exports = router;

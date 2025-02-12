@@ -4,15 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Hoàn thiện chức năng tải hình ảnh từ client lên cloudflare và gửi link về">
-      <change afterPath="$PROJECT_DIR$/config/cloudinary.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Hoàn thiện chức năng tải hình ảnh từ client lên cloudflare và nhận lại link">
+      <change afterPath="$PROJECT_DIR$/controller/messageController.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/cloudflare.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/socketConfig.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/messageModel.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/messageRouter.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/productController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/productController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/mailRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/mailRouter.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,20 +53,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.3.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "javascript.nodejs.core.library.configured.version": "22.12.0",
+    "javascript.nodejs.core.library.typings.version": "22.12.0",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.3.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\giahyng\Desktop\new-fashion-backend" />
@@ -91,6 +96,10 @@
       <workItem from="1738916710298" duration="80000" />
       <workItem from="1738916807163" duration="6406000" />
       <workItem from="1738933348121" duration="2209000" />
+      <workItem from="1738935596177" duration="118000" />
+      <workItem from="1738935842689" duration="7000" />
+      <workItem from="1738937114741" duration="1268000" />
+      <workItem from="1739332752080" duration="12450000" />
     </task>
     <task id="LOCAL-00001" summary="Hoàn thiện chức năng thêm , cập nhập sản phẩm , và review sản phẩm">
       <option name="closed" value="true" />
@@ -180,7 +189,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738900843887</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Hoàn thiện chức năng tải hình ảnh từ client lên cloudflare và nhận lại link">
+      <option name="closed" value="true" />
+      <created>1738935704137</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1738935704137</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -198,6 +215,7 @@
     <MESSAGE value="hoàn thiện chức năng gửi tin nhắn về mail khi người dùng mua hàng và thêm chức năng quên mật khẩu bằng mail code" />
     <MESSAGE value="Cập nhập chức năng khi sản phẩm hết thời gian khuyến mãi sẽ tự xóa khỏi list SaleProduct" />
     <MESSAGE value="Hoàn thiện chức năng thanh toán bằng momo lấy link thanh toán và thanh toán và check trạng thái thanh toán" />
-    <option name="LAST_COMMIT_MESSAGE" value="Hoàn thiện chức năng thanh toán bằng momo lấy link thanh toán và thanh toán và check trạng thái thanh toán" />
+    <MESSAGE value="Hoàn thiện chức năng tải hình ảnh từ client lên cloudflare và nhận lại link" />
+    <option name="LAST_COMMIT_MESSAGE" value="Hoàn thiện chức năng tải hình ảnh từ client lên cloudflare và nhận lại link" />
   </component>
 </project>
