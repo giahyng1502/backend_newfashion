@@ -1,69 +1,86 @@
-const { Review, Product } = require('../models/productModel');
-
+const { uploadImage } = require("../lib/cloudflare");
+const { Review, Product } = require("../models/productModel");
 const reviewController = {
-    addReview: async (req, res) => {
-        try {
-            const productId = req.params.productId;
-            const review = new Review(req.body);
+  addReview: async (req, res) => {
+    try {
+      const productId = req.params.productId;
+      const files = req.files;
+      let imageUrls = [];
+      if (files) {
+        imageUrls = await uploadImage(files);
+      }
 
-            if (!productId) {
-                return res.status(400).json({ message: "Thiếu productId!" });
-            }
+      if (!productId) {
+        return res.status(400).json({ message: "Thiếu productId!" });
+      }
+      const review = new Review({
+        userId: req.user.userId,
+        content: req.body.content,
+        rate: req.body.rating,
+        images: imageUrls,
+      });
 
-            if (!review) {
-                return res.status(400).json({ message: "Dữ liệu đánh giá không hợp lệ!" });
-            }
+      if (!review) {
+        return res
+          .status(400)
+          .json({ message: "Dữ liệu đánh giá không hợp lệ!" });
+      }
 
-            // Lưu đánh giá vào database
-            await review.save();
+      // Lưu đánh giá vào database
+      await review.save();
 
-            // Thêm review vào danh sách `reviews` trong `Product`
-            const product = await Product.findByIdAndUpdate(
-                productId,
-                { $push: { reviews: review._id } },
-                { new: true } // Trả về dữ liệu mới sau khi cập nhật
-            );
+      // Thêm review vào danh sách `reviews` trong `Product`
+      const product = await Product.findByIdAndUpdate(
+        productId,
+        { $push: { reviews: review._id } },
+        { new: true } // Trả về dữ liệu mới sau khi cập nhật
+      );
 
-            if (!product) {
-                return res.status(404).json({message :'sản phẩm không tồn tại'});
-            }
-            return res.status(200).json({message : 'Lấy review thành công',data: review});
-
-        } catch (e) {
-            console.error("Thêm đánh giá thất bại: " + e.message);
-            return res.status(500).json({ message: "Lỗi server", error: e.message });
-        }
-    },
-     deleteReview : async (req, res) => {
-        try {
-            const productId = req.params.productId;
-            const { reviewId } = req.body;
-
-            // Kiểm tra nếu không có productId hoặc reviewId
-            if (!productId || !reviewId) {
-                return res.status(400).json({ message: "Thiếu productId hoặc reviewId!" });
-            }
-
-            // Xóa review khỏi database
-            const review = await Review.findByIdAndDelete(reviewId);
-            if (!review) {
-                return res.status(404).json({ message: "Không tìm thấy review để xóa!" });
-            }
-
-            await Product.findByIdAndUpdate(
-                productId,
-                { $pull: { reviews: reviewId } },
-                { new: true }
-            );
-
-            return res.status(200).json({message : 'Xóa review thành công',data: review});
-
-
-        } catch (e) {
-            console.error("Xóa review sản phẩm thất bại: " + e.message);
-            return res.status(500).json({ message: "Lỗi server", error: e.message });
-        }
+      if (!product) {
+        return res.status(404).json({ message: "sản phẩm không tồn tại" });
+      }
+      return res
+        .status(200)
+        .json({ message: "Lấy review thành công", data: review });
+    } catch (e) {
+      console.error("Thêm đánh giá thất bại: " + e.message);
+      return res.status(500).json({ message: "Lỗi server", error: e.message });
     }
+  },
+  deleteReview: async (req, res) => {
+    try {
+      const productId = req.params.productId;
+      const { reviewId } = req.body;
+
+      // Kiểm tra nếu không có productId hoặc reviewId
+      if (!productId || !reviewId) {
+        return res
+          .status(400)
+          .json({ message: "Thiếu productId hoặc reviewId!" });
+      }
+
+      // Xóa review khỏi database
+      const review = await Review.findByIdAndDelete(reviewId);
+      if (!review) {
+        return res
+          .status(404)
+          .json({ message: "Không tìm thấy review để xóa!" });
+      }
+
+      await Product.findByIdAndUpdate(
+        productId,
+        { $pull: { reviews: reviewId } },
+        { new: true }
+      );
+
+      return res
+        .status(200)
+        .json({ message: "Xóa review thành công", data: review });
+    } catch (e) {
+      console.error("Xóa review sản phẩm thất bại: " + e.message);
+      return res.status(500).json({ message: "Lỗi server", error: e.message });
+    }
+  },
 };
 
 module.exports = reviewController;

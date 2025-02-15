@@ -2,8 +2,7 @@ var express = require("express");
 var router = express.Router();
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const { Product } = require("../models/productModel");
-const s3 = require("../lib/cloudflare");
-const { upload } = require("../lib/cloudflare");
+const { upload, s3 } = require("../lib/cloudflare");
 
 router.post("/product", upload.array("files", 5), async (req, res) => {
   // Giới hạn tối đa 5 file
