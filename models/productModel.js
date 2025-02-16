@@ -6,10 +6,12 @@ const reviewSchema = mongoose.Schema({
   },
   content: {
     type: String,
+    required: true,
   },
   userId: {
     type: mongoose.Schema.ObjectId,
     ref: "User",
+    required: true,
   },
   rate: {
     type: Number,

@@ -11,7 +11,7 @@ router.post("/product", upload.array("files", 5), async (req, res) => {
     return res.status(400).json({ error: "Không có file nào được chọn" });
   }
 
-  const { name, price, description, size, color } = req.body; // Thông tin sản phẩm gửi kèm từ frontend
+  const { name, price, description, size, color, category } = req.body; // Thông tin sản phẩm gửi kèm từ frontend
 
   if (!name || !price || !description || !size || !color) {
     return res
@@ -54,6 +54,7 @@ router.post("/product", upload.array("files", 5), async (req, res) => {
     const newProduct = new Product({
       name,
       price,
+      category,
       size: sizeColor,
       image: imageUrls, // Lưu nhiều ảnh dưới dạng mảng
       color: arrayColors,
