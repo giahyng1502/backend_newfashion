@@ -7,6 +7,6 @@ var router = express.Router();
 router.get('/getCart',userMiddle,cartController.getCart);
 router.post('/addToCart',userMiddle,cartController.addToCart);
 router.post('/updateCart',userMiddle,cartController.updateCart);
-router.post('/removeFromCart',userMiddle,cartController.removeFromCart);
+router.post('/removeFromCart/:productInCartId',userMiddle,cartController.removeFromCart);
 
 module.exports = router;

@@ -3,12 +3,14 @@ const Cart = require("../models/cartModel");
 const Voucher = require("../models/voucherModel");
 const Order = require("../models/orderModel");
 const SaleProduct = require("../models/SaleProduct");
-
+const {Product} = require("../models/productModel");
+const allowedStatus = [0, 1, 2, 3, 4, 5];
 const orderController = {
         create: async (req, res) => {
             try {
                 const {address, phoneNumber, voucherId, point} = req.body;
                 const userId = req.user.userId;
+                let disCountSale = 0;
                 const user = await User.findById(userId);
                 if (!user) {
                     return res.status(400).json({message: 'Không tìm thấy người dùng'});
@@ -30,8 +32,15 @@ const orderController = {
 
                     if (saleProduct) {
                         // Nếu có giảm giá, tính lại giá sau giảm
-                        const discountPrice = productPrice - (productPrice * saleProduct.discount / 100);
-                        totalPrice += discountPrice;
+                        if (saleProduct.limit > 0) {
+                            const discountPrice = productPrice - (productPrice * saleProduct.discount / 100);
+                            totalPrice += discountPrice;
+                            disCountSale = saleProduct.discount;
+                            saleProduct.limit = saleProduct.limit - 1;
+                            await saleProduct.save();
+                        }else{
+                            await SaleProduct.findByIdAndDelete(saleProduct._id);
+                        }
                     } else {
                         // Nếu không có giảm giá, tính theo giá gốc
                         totalPrice += productPrice;
@@ -79,7 +88,8 @@ const orderController = {
                     price: item.productId.price * item.quantity,
                     size: item.size,
                     color: item.color,
-                    quantity: item.quantity
+                    quantity: item.quantity,
+                    productId : item.productId
                 }));
 
                 // Tạo đơn hàng
@@ -90,6 +100,7 @@ const orderController = {
                     statusHistory: {
                         updatedBy: userId
                     },
+                    disCountSale : disCountSale,
                     voucherId: voucherId || null, // Chỉ gửi voucherId nếu có
                     point: point || null,
                     shippingAddress: {address, phoneNumber}
@@ -156,6 +167,11 @@ const orderController = {
                     updatedBy : userId,
                 })
             await order.save();
+                if (order.point > 0) {
+                    const user = await User.findByIdAndUpdate(order.userId,{
+                        point: order.point
+                    })
+                }
             return res.status(200).json({message : 'Hủy đơn hàng thành công', data : order})
         }catch (e) {
             console.log("Lỗi xẩy ra khi cập nhập trạng thái đơn hàng"+e.message);
@@ -164,22 +180,63 @@ const orderController = {
     },
     updateStatus: async (req, res) => {
         try{
+
             const orderId = req.params.orderId;
             const status = req.body.status;
             const admin = req.user.userId;
             const orderStatus = await Order.findById(orderId);
+
             if (!orderStatus) {
                 return res.status(200).json({message : 'Đơn hàng không tồn tại'})
+            }
+            if (!allowedStatus.includes(status)) {
+                return res.status(400).json({ message: "Trạng thái đơn hàng không hợp lệ!" });
             }
             if (orderStatus.status === status) {
                 return res.status(200).json({message : 'Vui lòng thay đổi trạng thái đơn hàng'})
             }
+            if (status === 2) {
+                for (const item of orderStatus.item) {
+                    await Product.findByIdAndUpdate(
+                        item.productId,
+                        {
+                            $inc: {
+                                sold: item.quantity,   // Tăng số lượng đã bán
+                                stock: -item.quantity  // Giảm số lượng tồn kho
+                            }
+                        },
+                        { new: true }
+                    );
+                }
+            }
+            if (status === 5) {
+                for (const item of orderStatus.items) {
+                    await Product.findByIdAndUpdate(
+                        item.productId,
+                        {
+                            $inc: {
+                                sold: - item.quantity,
+                                stock: item.quantity
+                            }
+                        },
+                        { new: true }
+                    );
+                }
+            }
+
             orderStatus.status = status;
             orderStatus.statusHistory.push({
                 status : status,
                 updatedBy : admin,
             })
             orderStatus.save();
+            if (status === 4) {
+                if (orderStatus.point > 0) {
+                    const user = await User.findByIdAndUpdate(orderStatus.userId,{
+                        point: orderStatus.point
+                    })
+                }
+            }
             return res.status(200).json({message : 'Cập nhập đơn hàng thành công', data : orderStatus})
         }catch (e) {
             console.log("Lỗi xẩy ra khi cập nhập trạng thái đơn hàng"+e.message);

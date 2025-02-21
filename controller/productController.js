@@ -37,9 +37,9 @@ const productController = {
         return res.status(400).json({ error: "Không có file nào được chọn" });
       }
 
-      let { name, price, description,sold, size, color, subCategory } = req.body;
+      let { name, price, description, size, color, subCategory,stock } = req.body;
 
-      if (!name || !price || !description || !size || !color || !subCategory || !sold) {
+      if (!name || !price || !description || !size || !color || !subCategory || !stock) {
         return res.status(400).json({ error: "Không được bỏ trống các trường" });
       }
       const subCate = await SubCategory.findById(subCategory)
@@ -74,7 +74,7 @@ const productController = {
         size,
         image: imageUrls,
         color,
-        sold,
+        stock,
         description,
       });
 
@@ -92,7 +92,7 @@ const productController = {
    updateProduct : async (req, res) => {
     try {
       const id = req.params.productId;
-      let { name, price, description, size, color, subCategory, sold } = req.body;
+      let { name, price, description, size, color, subCategory, stock } = req.body;
       const updateFields = {}; // Chứa các trường cần update
 
       if (subCategory) {
@@ -113,8 +113,8 @@ const productController = {
       }
 
       // Ép kiểu `sold` sang số nếu tồn tại
-      if (sold !== undefined) {
-        updateFields.sold = Number(sold);
+      if (stock !== undefined) {
+        updateFields.stock = Number(stock);
       }
 
       // Upload hình ảnh nếu có

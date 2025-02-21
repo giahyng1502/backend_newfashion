@@ -12,6 +12,12 @@ const saleProductSchema = new mongoose.Schema({
         min: 0,
         max: 100,
     },
+    limit : {
+      type: Number,
+      required: true,
+      min: 0,
+      default: 1,
+    },
     expireAt: {
         type: Date,
         required: true

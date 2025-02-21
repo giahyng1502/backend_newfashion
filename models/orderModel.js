@@ -14,12 +14,14 @@ const orderSchema = mongoose.Schema({
         type: Number,
         required: true,
         default: 0,
-        // 0 = Chờ xác nhận
-        // 1 = Chờ giao hàng
-        // 2 = Đang vận chuyển
-        // 3 = Giao hàng thành công
-        // 4 = Hủy đơn hàng
+        enum: [0, 1, 2, 3, 4, 5], // Chỉ chấp nhận các giá trị này
     },
+    // 0 = Chờ xác nhận
+    // 1 = Chờ giao hàng
+    // 2 = Đang vận chuyển
+    // 3 = Giao hàng thành công
+    // 4 = Hủy đơn hàng
+    // 5 = Hoàn đơn hàng
     totalPrice: {
         type: Number,
         required: true,
@@ -29,6 +31,10 @@ const orderSchema = mongoose.Schema({
         type: String,
     },
     point: {
+        type: Number,
+        default: 0,
+    },
+    disCountSale : {
         type: Number,
         default: 0,
     },
@@ -44,6 +50,11 @@ const orderSchema = mongoose.Schema({
     },
     item: [
         {
+            productId : {
+              type: mongoose.Schema.ObjectId,
+              ref: 'Product',
+              required: true,
+            },
             productName : {
                 type: String,
                 required: true,

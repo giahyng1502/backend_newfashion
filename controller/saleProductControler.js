@@ -5,7 +5,7 @@ const saleProductController = {
     // Thêm sản phẩm giảm giá
     addSaleProduct: async (req, res) => {
         try {
-            const { productId, discount, expireAt } = req.body;
+            const { productId, discount, expireAt,limit } = req.body;
 
             // Kiểm tra xem sản phẩm có tồn tại không
             const product = await Product.findById(productId);
@@ -24,6 +24,7 @@ const saleProductController = {
             const saleProduct = new SaleProduct({
                 productId,
                 discount,
+                limit,
                 expireAt : remainDate,
             });
 
@@ -39,7 +40,7 @@ const saleProductController = {
     updateSaleProduct: async (req, res) => {
         try {
             const saleProductId = req.params.saleProductId;
-            const { discount, expireAt } = req.body;
+            const { discount, expireAt,limit } = req.body;
 
             const saleProduct = await SaleProduct.findById(saleProductId);
             if (!saleProduct) {
@@ -51,6 +52,7 @@ const saleProductController = {
 
             if (discount !== undefined) saleProduct.discount = discount;
             if (expireAt !== undefined) saleProduct.expireAt = remainDate;
+            if (limit !== undefined) saleProduct.limit = limit;
 
             await saleProduct.save();
             return res.status(200).json({ message: "Cập nhật giảm giá thành công", data: saleProduct });

@@ -6,6 +6,11 @@ const cartSchema = mongoose.Schema({
                 type : mongoose.Schema.ObjectId,
                 ref : "Product",
             },
+            disCountSale : {
+                type : Number,
+                min : 0,
+                default : 0
+            },
             quantity : {
                 type: Number,
                 default: 1
@@ -15,6 +20,13 @@ const cartSchema = mongoose.Schema({
             },
             color : {
                 type : String,
+            },
+            price : {
+                type : Number,
+            },
+            discount : {
+                type : Number,
+                min : 0
             }
         }
     ],
