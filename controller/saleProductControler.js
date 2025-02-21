@@ -83,13 +83,31 @@ const saleProductController = {
     // Lấy tất cả sản phẩm giảm giá
     getAllSaleProducts: async (req, res) => {
         try {
-            const saleProducts = await SaleProduct.find().populate('productId');
-            return res.status(200).json({ message: "Lấy danh sách sản phẩm giảm giá thành công", data: saleProducts });
+            let page = parseInt(req.query.page) || 1; // Lấy số trang từ query, mặc định là 1
+            let limit = parseInt(req.query.limit) || 10; // Số sản phẩm mỗi trang, mặc định là 10
+            let skip = (page - 1) * limit; // Tính số sản phẩm cần bỏ qua
+
+            // Lấy tổng số sản phẩm giảm giá để tính tổng số trang
+            const totalSaleProducts = await SaleProduct.countDocuments();
+
+            // Lấy sản phẩm giảm giá với phân trang
+            const saleProducts = await SaleProduct.find()
+                .populate('productId')
+                .skip(skip)
+                .limit(limit);
+
+            return res.status(200).json({
+                message: "Lấy danh sách sản phẩm giảm giá thành công",
+                data: saleProducts,
+                totalPages: Math.ceil(totalSaleProducts / limit),
+                currentPage: page,
+            });
         } catch (error) {
             console.error("Lỗi khi lấy danh sách sản phẩm giảm giá: " + error.message);
             return res.status(500).json({ message: "Lỗi server", error: error.message });
         }
     },
+
 
     // Lấy sản phẩm giảm giá theo ID
     getSaleProductById: async (req, res) => {

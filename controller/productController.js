@@ -1,35 +1,80 @@
-const { Product } = require("../models/productModel");
+const { Product, Review} = require("../models/productModel");
 const {uploadImage} = require("../lib/cloudflare");
 const {SubCategory} = require("../models/categoryModel");
+const SaleProduct = require("../models/SaleProduct");
 const productController = {
   getAll: async (req, res) => {
     try {
-      const products = await Product.find({});
-      return res
-        .status(200)
-        .json({ message: "Lấy sản phẩm thành công", data: products });
+      let page = parseInt(req.query.page) || 1;
+      let limit = parseInt(req.query.limit) || 10;
+      let skip = (page - 1) * limit; // Bỏ qua số lượng sản phẩm cần thiết
+
+      // Tìm tổng số sản phẩm
+      const totalProducts = await Product.countDocuments();
+
+      // Lấy danh sách sản phẩm có phân trang
+      const products = await Product.find({})
+          .skip(skip)
+          .limit(limit);
+
+      return res.status(200).json({
+        message: "Lấy sản phẩm thành công",
+        data: products,
+        currentPage: page,
+        totalPages: Math.ceil(totalProducts / limit),
+        totalProducts: totalProducts
+      });
+
     } catch (e) {
-      console.error("lấy dữ liệu sản phẩm thất bại: " + e.message);
+      console.error("Lấy dữ liệu sản phẩm thất bại: " + e.message);
       return res.status(500).json({ message: "Lỗi server", error: e.message });
     }
   },
+
   getOne: async (req, res) => {
     try {
       const productId = req.params.productId;
-      const product = await Product.findById(productId).populate({
-        path: "reviews",
-        populate: {
-          path: "userId", // Đây là trường cần populate từ review
-          select: "name avatar",
-        },
+      let page = parseInt(req.query.page) || 1;
+      let limit = parseInt(req.query.limit) || 5;
+      let skip = (page - 1) * limit;
+
+      const product = await Product.findById(productId)
+          .populate({
+            path: "reviews",
+            options: { limit: limit, skip: skip }, // Áp dụng phân trang cho review
+            populate: {
+              path: "userId",
+              select: "name avatar",
+            },
+          });
+
+      // Tính tổng số review để biết tổng số trang
+      const totalReviews = await Review.countDocuments({ productId });
+      const totalPages = Math.ceil(totalReviews / limit);
+
+      const saleProduct = await SaleProduct.findOne({productId: productId});
+      if (saleProduct) {
+        return res.status(200).json({
+          message: "Lấy chi tiết sản phẩm thành công",
+          data: product,
+          discount : saleProduct.discount,
+          limit : saleProduct.limit,
+          expireAt : saleProduct.expireAt,
+          totalPages: totalPages,
+          currentPage: page,
+        });
+      }
+      return res.status(200).json({
+        message: "Lấy chi tiết sản phẩm thành công",
+        data: product,
+        totalPages: totalPages,
+        currentPage: page,
       });
-      return res
-        .status(200)
-        .json({ message: "Lấy chi tiết sản phẩm thành công", data: product });
     } catch (e) {
-      console.error("lấy dữ liệu sản phẩm thất bại: " + e.message);
+      console.error("Lấy dữ liệu sản phẩm thất bại: " + e.message);
       return res.status(500).json({ message: "Lỗi server", error: e.message });
     }
+
   },
    addProduct : async (req, res) => {
     try {

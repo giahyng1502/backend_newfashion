@@ -2,15 +2,35 @@ const bcrypt = require('bcrypt');
 const  jwt = require('jsonwebtoken')
 const {User, Information} = require("../models/userModel");
 const UserController = {
-    getUsers : async (req, res) => {
-        try{
-            const user = await User.find({}).populate("information");
-            return res.status(200).json({message : 'Lấy thông tin người dùng thành công',data: user});
+    getUsers: async (req, res) => {
+        try {
+            let page = parseInt(req.query.page) || 1;
+            let limit = parseInt(req.query.limit) || 10;
+            let skip = (page - 1) * limit;
 
-        }catch (err){
-            console.log("Lấy dữ liệu người dùng thất bại"+err.message);
-            return res.status(500).json({message : 'Lấy thông tin người dùng thất bại',error : err.message});
+            // Lấy danh sách user theo phân trang
+            const users = await User.find({})
+                .populate("information")
+                .skip(skip)
+                .limit(limit);
 
+            // Tính tổng số user để biết tổng số trang
+            const totalUsers = await User.countDocuments({});
+            const totalPages = Math.ceil(totalUsers / limit);
+
+            return res.status(200).json({
+                message: "Lấy thông tin người dùng thành công",
+                data: users,
+                totalPages: totalPages,
+                currentPage: page,
+            });
+
+        } catch (err) {
+            console.log("Lấy dữ liệu người dùng thất bại: " + err.message);
+            return res.status(500).json({
+                message: "Lấy thông tin người dùng thất bại",
+                error: err.message,
+            });
         }
     },
     register: async (req, res) => {

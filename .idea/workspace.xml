@@ -4,17 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Thay đổi thuộc tính description và update lại phương thức thêm sửa sản phẩm">
+    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Sửa lại logic sản phẩm giảm giá và tính tiền sản phẩm khi trong khung giời giảm giá và cập nhập lại số lượng sản phẩm khi sản phẩm ở trạng thái đang giao hàng và hoàn hàng">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/cartController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/cartController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/orderController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/orderController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/productController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/productController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/saleProductControler.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/saleProductControler.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/SaleProduct.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/SaleProduct.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/cartModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/cartModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/orderModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/orderModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/productModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/productModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/cart.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/cart.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +94,7 @@
       <workItem from="1738935842689" duration="7000" />
       <workItem from="1738937114741" duration="1268000" />
       <workItem from="1739332752080" duration="12450000" />
-      <workItem from="1740117125734" duration="16267000" />
+      <workItem from="1740117125734" duration="18973000" />
     </task>
     <task id="LOCAL-00001" summary="Hoàn thiện chức năng thêm , cập nhập sản phẩm , và review sản phẩm">
       <option name="closed" value="true" />
@@ -214,7 +208,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740126791624</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Sửa lại logic sản phẩm giảm giá và tính tiền sản phẩm khi trong khung giời giảm giá và cập nhập lại số lượng sản phẩm khi sản phẩm ở trạng thái đang giao hàng và hoàn hàng">
+      <option name="closed" value="true" />
+      <created>1740133943521</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1740133943521</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -235,6 +237,7 @@
     <MESSAGE value="Hoàn thiện chức năng tải hình ảnh từ client lên cloudflare và nhận lại link" />
     <MESSAGE value="Thêm thuộc tính subCategory vào category hoàn thiện chức năng crud của subcategory" />
     <MESSAGE value="Thay đổi thuộc tính description và update lại phương thức thêm sửa sản phẩm" />
-    <option name="LAST_COMMIT_MESSAGE" value="Thay đổi thuộc tính description và update lại phương thức thêm sửa sản phẩm" />
+    <MESSAGE value="Sửa lại logic sản phẩm giảm giá và tính tiền sản phẩm khi trong khung giời giảm giá và cập nhập lại số lượng sản phẩm khi sản phẩm ở trạng thái đang giao hàng và hoàn hàng" />
+    <option name="LAST_COMMIT_MESSAGE" value="Sửa lại logic sản phẩm giảm giá và tính tiền sản phẩm khi trong khung giời giảm giá và cập nhập lại số lượng sản phẩm khi sản phẩm ở trạng thái đang giao hàng và hoàn hàng" />
   </component>
 </project>

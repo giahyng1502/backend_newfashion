@@ -121,8 +121,21 @@ const orderController = {
         },
     getAll: async (req, res) => {
         try {
-            const orders = await Order.find();
-            return res.status(200).json({ message: 'Lấy thông tin đơn hàng thành công', data : orders });
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 1;
+
+            const skip = (page - 1) * limit;
+
+            const totalOrder = await Order.countDocuments();
+            const orders = await Order.find().skip(skip).limit(limit);
+
+            return res.status(200).json({
+                message: "Lấy thông tin đơn hàng thành công",
+                data: orders,
+                currentPage: page,
+                totalPages: Math.ceil(totalOrder / limit),
+                totalProducts: totalOrder
+            });
         } catch (e) {
             console.error("Lấy đơn hàng thất bại: " + e.message);
             return res.status(500).json({
