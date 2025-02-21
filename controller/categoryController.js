@@ -1,15 +1,22 @@
-const Category = require("../models/categoryModel");
+const {Category} = require("../models/categoryModel");
 const { Product } = require("../models/productModel");
+const {uploadImage} = require("../lib/cloudflare");
 
 const categoryController = {
   // Create Category
   createCategory: async (req, res) => {
     try {
-      const { categoryName, image } = req.body;
-
+      const { categoryName } = req.body;
+      const files = req.files;
+      let images = [];
+      console.log(files)
+      if (files) {
+        images = await uploadImage(files)
+      }
+      const imageCategory = images[0];
       const newCategory = new Category({
         categoryName,
-        image,
+        imageCategory
       });
 
       await newCategory.save();
