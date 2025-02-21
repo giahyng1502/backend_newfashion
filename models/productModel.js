@@ -1,4 +1,19 @@
 const mongoose = require("mongoose");
+//  Chất liệu: Polyester
+// Thành phần: 100% Polyester
+// Chiều dài tay áo: Dài tay
+// Họa tiết: Họa tiết hình học
+// Đối tượng sử dụng: Người lớn
+// Độ xuyên thấu: Không
+// Loại: Áo khoác
+// Mùa: Thu/Đông
+// Hướng dẫn sử dụng: Giặt máy, không giặt khô
+// Phong cách: Thời trang thường ngày
+// Độ co giãn của vải: Co giãn nhẹ
+// Phương pháp dệt: Dệt thoi
+// Xuất xứ: Hồ Bắc, Trung Quốc
+
+
 const reviewSchema = mongoose.Schema({
   images: {
     type: [String],
@@ -25,12 +40,28 @@ const reviewSchema = mongoose.Schema({
     default: Date.now,
   },
 });
-const productSchema = mongoose.Schema({
+const descriptionSchema = new mongoose.Schema({
+  material: { type: String }, // Chất liệu
+  composition: { type: String }, // Thành phần
+  sleeveLength: { type: String }, // Chiều dài tay áo
+  pattern: { type: String }, // Họa tiết
+  applicablePeople: { type: String }, // Đối tượng sử dụng
+  sheer: { type: Boolean }, // Độ xuyên thấu
+  type: { type: String }, // Loại sản phẩm
+  season: { type: [String] }, // Mùa phù hợp (VD: ['Fall', 'Winter'])
+  operationInstruction: { type: String }, // Hướng dẫn sử dụng
+  style: { type: String }, // Phong cách
+  fabricElasticity: { type: String }, // Độ co giãn
+  weavingMethod: { type: String }, // Phương pháp dệt
+  origin: { type: String }, // Xuất xứ
+});
+
+const productSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
   },
-  quantity: {
+  sold: {
     type: Number,
     required: true,
     min: 0,
@@ -46,7 +77,7 @@ const productSchema = mongoose.Schema({
     min: 0,
   },
   description: {
-    type: String,
+    type: descriptionSchema, // Sử dụng subdocument schema đã định nghĩa
     required: true,
   },
   reviews: {
@@ -61,9 +92,9 @@ const productSchema = mongoose.Schema({
     type: [String],
     required: true,
   },
-  category: {
+  subCategory: {
     type: mongoose.Schema.ObjectId,
-    ref: "Category",
+    ref: "Subcategory",
   },
 });
 

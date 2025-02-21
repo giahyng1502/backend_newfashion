@@ -12,10 +12,11 @@ var voucherRouter = require("./routes/voucher");
 var orderRouter = require("./routes/order");
 var postRouter = require("./routes/post");
 var categoryRouter = require("./routes/category");
+var subCategoryRouter = require("./routes/subCategoryRouter");
 var emailRouter = require("./routes/mailRouter");
 var authRouter = require("./routes/authRouter");
 var momoRouter = require("./routes/momoRouter");
-var cloudRouter = require("./routes/cloudRouter");
+// var cloudRouter = require("./routes/cloudRouter");
 var messageRouter = require("./routes/messageRouter");
 
 var { app } = require("./lib/socketConfig");
@@ -38,10 +39,11 @@ app.use("/order", orderRouter);
 app.use("/post", postRouter);
 app.use("/saleProduct", saleProduct);
 app.use("/category", categoryRouter);
+app.use("/subcategory", subCategoryRouter);
 app.use("/mail", emailRouter);
 app.use("/auth", authRouter);
 app.use("/momo", momoRouter);
-app.use("/upload", cloudRouter);
+// app.use("/upload", cloudRouter);
 app.use("/message", messageRouter);
 
 // catch 404 and forward to error handler
