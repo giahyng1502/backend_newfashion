@@ -7,6 +7,7 @@ var logger = require("morgan");
 var indexRouter = require("./routes/product");
 var saleProduct = require("./routes/saleProduct");
 var usersRouter = require("./routes/users");
+var information = require("./routes/informationRouter");
 var cartRouter = require("./routes/cart");
 var voucherRouter = require("./routes/voucher");
 var orderRouter = require("./routes/order");
@@ -33,6 +34,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/information",information );
 app.use("/cart", cartRouter);
 app.use("/voucher", voucherRouter);
 app.use("/order", orderRouter);

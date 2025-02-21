@@ -8,7 +8,7 @@ const allowedStatus = [0, 1, 2, 3, 4, 5];
 const orderController = {
         create: async (req, res) => {
             try {
-                const {address, phoneNumber, voucherId, point} = req.body;
+                const {address, phoneNumber,name, voucherId, point} = req.body;
                 const userId = req.user.userId;
                 let disCountSale = 0;
                 const user = await User.findById(userId);
@@ -103,7 +103,7 @@ const orderController = {
                     disCountSale : disCountSale,
                     voucherId: voucherId || null, // Chỉ gửi voucherId nếu có
                     point: point || null,
-                    shippingAddress: {address, phoneNumber}
+                    shippingAddress: {address, phoneNumber,name}
                 });
 
                 await order.save();

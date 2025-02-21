@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const  jwt = require('jsonwebtoken')
 const {User, Information} = require("../models/userModel");
+const {uploadImage} = require("../lib/cloudflare");
 const UserController = {
     getUsers: async (req, res) => {
         try {
@@ -53,6 +54,60 @@ const UserController = {
             return res.status(500).json({ message: "Lỗi server", error: err.message });
         }
     },
+        updateUser: async (req, res) => {
+            try {
+                const userId = req.user.userId;
+                const { name, password } = req.body;
+                const files = req.files;
+
+                if (!userId) {
+                    return res.status(400).json({ message: "Bạn cần đăng nhập để thực hiện chức năng này" });
+                }
+
+                let userUpdate = {};
+
+                // Upload ảnh nếu có
+                if (files && files.length > 0) {
+                    const image = await uploadImage(files);
+                    if (image && image.length > 0) {
+                        userUpdate.avatar = image[0];
+                    }
+                }
+
+                // Cập nhật name
+                if (name) {
+                    userUpdate.name = name;
+                }
+
+                // Hash mật khẩu trước khi cập nhật
+                if (password) {
+                    const salt = await bcrypt.genSalt(10);
+                    userUpdate.password = await bcrypt.hash(password, salt);
+                }
+
+                // Thực hiện cập nhật người dùng
+                const updatedUser = await User.findByIdAndUpdate(userId, userUpdate, {
+                    new: true, // Trả về bản ghi mới sau khi cập nhật
+                });
+
+                if (!updatedUser) {
+                    return res.status(404).json({ message: "Cập nhật thông tin người dùng thất bại" });
+                }
+
+                return res.status(200).json({
+                    message: "Cập nhật thông tin người dùng thành công",
+                    data: updatedUser
+                });
+
+            } catch (err) {
+                console.error("Cập nhật thông tin người dùng thất bại:", err.message);
+                return res.status(500).json({
+                    message: "Lỗi server",
+                    error: err.message
+                });
+            }
+        },
+
 
     login : async (req, res) => {
         try{

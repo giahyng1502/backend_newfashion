@@ -10,6 +10,14 @@ const informationSchema = new mongoose.Schema({
         type: Number,
         required: true,
         default: 0,
+    },
+    userId : {
+        type: mongoose.Schema.ObjectId,
+        required: true,
+    },
+    name : {
+        type: String,
+        required: true,
     }
 }, { timestamps: true });
 
@@ -26,10 +34,6 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    },
-    information: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Information'
     },
     avatar: {
         type: String,
@@ -52,15 +56,6 @@ const userSchema = new mongoose.Schema({
         default: 0
     }
 }, { timestamps: true });
-
-userSchema.pre('save', async function (next) {
-    if (!this.information) {
-        const newInfo = await Information.create({});
-        this.information = newInfo._id;
-    }
-    next();
-});
-
 const Information = mongoose.model('Information', informationSchema);
 const User = mongoose.model('User', userSchema);
 
