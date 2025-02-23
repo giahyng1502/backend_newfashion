@@ -9,9 +9,8 @@ const categoryController = {
       const { categoryName } = req.body;
       const files = req.files;
       let images = [];
-      console.log(files)
-      if (files) {
-        images = await uploadImage(files)
+      if (files && files.length > 0) {
+        images = await uploadImage(files);
       }
       const imageCategory = images[0];
       const newCategory = new Category({

@@ -11,6 +11,7 @@ router.get('/subcate/:id', subCategoryController.getSubCateByCategory);  // Lấ
 
 /* CREATE a new category. */
 router.post('/', verifyAdmin,upload.array('files',1), categoryController.createCategory);  // Tạo mới danh mục (Chỉ admin có quyền)
+
 router.post('/subcate', verifyAdmin,upload.array('files',1), subCategoryController.addSubCategories);  // Tạo mới danh mục (Chỉ admin có quyền)
 
 /* UPDATE category by ID. */

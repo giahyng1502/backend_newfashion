@@ -1,13 +1,19 @@
 const Post = require('../models/postModel');
 const User = require('../models/userModel');
+const {uploadImage} = require("../lib/cloudflare");
 
 const postController = {
     // 1. Tạo bài viết
     createPost: async (req, res) => {
         try {
-            const { content, image } = req.body;
+            const { content } = req.body;
+            const files = req.files;
             const userId = req.user.userId;
 
+            let image = [];
+            if (files && files.length) {
+                image = await uploadImage(files);
+            }
             if (!content) {
                 return res.status(400).json({ message: 'Nội dung bài viết không được để trống' });
             }
@@ -15,7 +21,7 @@ const postController = {
             const newPost = new Post({
                 userId,
                 content,
-                image: image || [],
+                image: image,
             });
 
             await newPost.save();
@@ -41,16 +47,17 @@ const postController = {
     updatePost: async (req, res) => {
         try {
             const { postId } = req.params;
-            const { content, image } = req.body;
+            const { content } = req.body;
+            const files = req.files;
 
+            let image;
+            if (files && files.length) {
+                image = await uploadImage(files);
+            }
             const post = await Post.findById(postId);
             if (!post) {
                 return res.status(404).json({ message: 'Bài viết không tồn tại' });
             }
-            //if (post.userId.toString() !== userId) {
-            //    return res.status(403).json({ message: 'Bạn không có quyền chỉnh sửa bài viết này' });
-            //}
-
             post.content = content || post.content;
             post.image = image || post.image;
             await post.save();
@@ -66,7 +73,6 @@ const postController = {
     deletePost: async (req, res) => {
         try {
             const { postId } = req.params;
-            const userId = req.user.userId;
 
             const post = await Post.findById(postId);
             if (!post) {
