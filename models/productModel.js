@@ -98,6 +98,18 @@ const productSchema = new mongoose.Schema({
     type: [String],
     required: true,
   },
+  rating :{
+    type: Number,
+    min: 0,
+    max: 5,
+    default: 0,
+  },
+  rateCount : {
+    type: Number,
+    min: 0,
+    max: 5,
+    default: 0,
+  },
   subCategory: {
     type: mongoose.Schema.ObjectId,
     ref: "Subcategory",

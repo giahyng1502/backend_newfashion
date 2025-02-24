@@ -1,9 +1,57 @@
 const mongoose = require('mongoose');
 
+const replies = new mongoose.Schema({
+    user:
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'User', required: true
+        },
+    likes: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'User',
+        }
+    ],
+    content: {
+        type: String,
+        required: true
+    },
+    createdAt: { type: Date, default: Date.now },
+})
+
+const commentSchema = new mongoose.Schema({
+    user:
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'User', required: true
+        },
+    likes: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'User',
+        }
+    ],
+    content: {
+        type: String,
+        required: true
+    },
+    replies: [
+        {
+            type : mongoose.Schema.ObjectId,
+            ref: 'Reply',
+        }
+    ],
+    createdAt: { type: Date, default: Date.now },
+})
 const postSchema = new mongoose.Schema({
-    userId: {
+    user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
+        required: true,
+    },
+    product : {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Product',
         required: true,
     },
     content: {
@@ -14,25 +62,23 @@ const postSchema = new mongoose.Schema({
         type: [String], // Mảng chứa URL ảnh
         default: [],
     },
-    likes: {
-        type: [mongoose.Schema.ObjectId], // Mảng chứa ID người đã like
-        ref: 'User',
-        default: [],
-    },
+    likes: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'User',
+        }
+    ],
+
     comments: [
         {
-            userId:
-                {
-                type: mongoose.Schema.ObjectId,
-                ref: 'User', required: true
-            },
-            comment:
-                { type: String,
-                    required: true },
-            createdAt: { type: Date, default: Date.now },
+            type: mongoose.Schema.ObjectId,
+            ref: 'Comment',
         }
     ]
 }, { timestamps: true });
 
 const Post = mongoose.model('Post', postSchema);
-module.exports = Post;
+const Comment = mongoose.model('Comment', commentSchema);
+const Reply = mongoose.model('Reply', replies);
+
+module.exports = {Post, Comment, Reply};

@@ -8,6 +8,7 @@ var router = express.Router();
 /* GET category listing. */
 router.get('/', categoryController.getAllCategories);  // Lấy danh sách danh mục
 router.get('/subcate/:id', subCategoryController.getSubCateByCategory);  // Lấy danh sách danh mục
+router.get('/getProduct/:id', categoryController.getProductCategories);  // Lấy danh sách danh mục
 
 /* CREATE a new category. */
 router.post('/', verifyAdmin,upload.array('files',1), categoryController.createCategory);  // Tạo mới danh mục (Chỉ admin có quyền)

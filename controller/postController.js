@@ -1,4 +1,4 @@
-const Post = require('../models/postModel');
+const {Post,Comment, Reply} = require('../models/postModel');
 const User = require('../models/userModel');
 const {uploadImage} = require("../lib/cloudflare");
 
@@ -6,9 +6,9 @@ const postController = {
     // 1. Tạo bài viết
     createPost: async (req, res) => {
         try {
-            const { content } = req.body;
+            const { content ,product} = req.body;
             const files = req.files;
-            const userId = req.user.userId;
+            const user = req.user.userId;
 
             let image = [];
             if (files && files.length) {
@@ -19,8 +19,9 @@ const postController = {
             }
 
             const newPost = new Post({
-                userId,
+                user,
                 content,
+                product,
                 image: image,
             });
 
@@ -35,7 +36,10 @@ const postController = {
     // 2. Lấy danh sách bài viết
     getAllPosts: async (req, res) => {
         try {
-            const posts = await Post.find();
+            const posts = await Post.find({});
+            const result = posts.map((post) => {
+
+            })
             return res.status(200).json({ message: 'Lấy danh sách bài viết thành công', data : posts });
         } catch (error) {
             console.error("Lỗi khi lấy danh sách bài viết:", error);
@@ -94,18 +98,18 @@ const postController = {
     toggleLikePost: async (req, res) => {
         try {
             const { postId } = req.params;
-            const userId = req.user.userId;
+            const user = req.user.userId;
 
             const post = await Post.findById(postId);
             if (!post) {
                 return res.status(404).json({ message: 'Bài viết không tồn tại' });
             }
 
-            const isLiked = post.likes.includes(userId);
+            const isLiked = post.likes.includes(user);
             if (isLiked) {
-                post.likes = post.likes.filter(id => id.toString() !== userId);
+                post.likes = post.likes.filter(id => id.toString() !== user);
             } else {
-                post.likes.push(userId);
+                post.likes.push(user);
             }
 
             await post.save();
@@ -117,41 +121,63 @@ const postController = {
     },
 
     // 6. Bình luận bài viết
-    commentPost: async (req, res) => {
+
+    getPostDetails: async (req, res) => {
         try {
-            const { postId } = req.params;
-            const { comment } = req.body;
-            const userId = req.user.userId;
+            const postId = req.params.postId;
+            const userId = req.user.id;
 
-            const post = await Post.findById(postId);
+            const post = await Post.findById(postId)
+                .populate("user", "name avatar") // ✅ Lấy thông tin user
+                .populate("product", "sold rateCount") // ✅ Lấy thông tin sản phẩm
+                .populate({
+                    path: "comments",
+                    options: {limit : 10},
+                    populate: {
+                        path: "user",
+                        select: "name avatar",
+                        match: { _id: { $ne: null } }, // ✅ Chỉ lấy comment có userId hợp lệ
+                    },
+                })
+
             if (!post) {
-                return res.status(404).json({ message: 'Bài viết không tồn tại' });
+                return res.status(404).json({ message: "Bài viết không tồn tại" });
             }
 
-            const newComment = { userId, comment, createdAt: new Date() };
-            post.comments.push(newComment);
-            await post.save();
+            console.log(post);
 
-            return res.status(200).json({ message: 'Bình luận thành công', data : post });
+            // Xử lý dữ liệu trả về
+            const formattedPost = {
+                shopName: post.user ? post.user.name : "Unknown Shop", // ✅ Kiểm tra null
+                shopAvatar: post.user ? post.user.avatar : "",
+                time: post.createdAt,
+                imageUrl: post.image,
+                content: post.content,
+                likeCount: post.likes.length,
+                isLike: post.likes.includes(userId),
+                commentCount: post.comments.length,
+                rateCount: post.product?.rateCount || 0,
+                soldCount: post.product?.sold || 0,
+            };
+
+            const formattedComments = post.comments.map((comment) => ({
+                likeCount: comment.likes.length,
+                commentCount: comment.replies.length,
+                isLike: comment.likes.includes(userId),
+                name: comment.user ? comment.user.name : "Unknown User",
+                content: comment.content,
+                time: comment.createdAt,
+                avatar: comment.user ? comment.user.avatar : null,
+                replyCount : comment.replies.length,
+            }));
+
+            return res.status(200).json({ post: formattedPost, comments: formattedComments });
         } catch (error) {
-            console.error("Lỗi khi bình luận bài viết:", error);
-            return res.status(500).json({ message: 'Lỗi server', error: error.message });
+            console.error("Lỗi lấy bài viết:", error);
+            return res.status(500).json({ message: "Lỗi server", error: error.message });
         }
-    },
-    getPostDetail: async (req, res) => {
-        try{
-            const { postId } = req.params;
-            const post = await Post.findById(postId).populate('comments.userId',"name avatar").sort({createdAt : -1});
-            if (!post) {
-                return res.status(404).json({message : 'Bài đăng này không tồn tại'});
-            }
-            return res.status(404).json({message : 'Lấy chi tiết bài viết thành công',data : post});
-        }catch (e) {
-            console.error("Lỗi khi bình luận bài viết:", e);
-            return res.status(500).json({ message: 'Lỗi server', error: e.message });
-        }
-
     }
+
 };
 
 module.exports = postController;

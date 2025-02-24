@@ -4,11 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="thêm chức năng crud địa chỉ người nhận hàng và chức năng upload avatar , đổi mật khẩu , cập nhập thông tin cá nhân">
+    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Sửa chức năng post bài viết cho phép admin có thể upload ảnh">
+      <change afterPath="$PROJECT_DIR$/controller/commentController.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/controller/replyController.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/commentRouter.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/replyRouter.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/ReviewController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/ReviewController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/categoryController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/categoryController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/cart.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/cart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/postController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/postController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/postModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/postModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/productModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/productModel.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/category.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/category.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/post.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/post.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/subCategoryRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/subCategoryRouter.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,7 +105,7 @@
       <workItem from="1738937114741" duration="1268000" />
       <workItem from="1739332752080" duration="12450000" />
       <workItem from="1740117125734" duration="23061000" />
-      <workItem from="1740295239259" duration="1358000" />
+      <workItem from="1740295239259" duration="19292000" />
     </task>
     <task id="LOCAL-00001" summary="Hoàn thiện chức năng thêm , cập nhập sản phẩm , và review sản phẩm">
       <option name="closed" value="true" />
@@ -233,7 +243,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740139593782</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Sửa chức năng post bài viết cho phép admin có thể upload ảnh">
+      <option name="closed" value="true" />
+      <created>1740302463739</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1740302463739</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -257,6 +275,7 @@
     <MESSAGE value="Sửa lại logic sản phẩm giảm giá và tính tiền sản phẩm khi trong khung giời giảm giá và cập nhập lại số lượng sản phẩm khi sản phẩm ở trạng thái đang giao hàng và hoàn hàng" />
     <MESSAGE value="Giới hạn số lượng người data trả về cho người dùng bằng phân trang" />
     <MESSAGE value="thêm chức năng crud địa chỉ người nhận hàng và chức năng upload avatar , đổi mật khẩu , cập nhập thông tin cá nhân" />
-    <option name="LAST_COMMIT_MESSAGE" value="thêm chức năng crud địa chỉ người nhận hàng và chức năng upload avatar , đổi mật khẩu , cập nhập thông tin cá nhân" />
+    <MESSAGE value="Sửa chức năng post bài viết cho phép admin có thể upload ảnh" />
+    <option name="LAST_COMMIT_MESSAGE" value="Sửa chức năng post bài viết cho phép admin có thể upload ảnh" />
   </component>
 </project>

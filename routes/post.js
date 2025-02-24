@@ -11,6 +11,5 @@ router.put('/update/:postId',verifyAdmin,upload.array('files',5),postController.
 
 router.get('/getAll',userMiddle,postController.getAllPosts);
 router.put('/toggleLikePost/:postId',userMiddle,postController.toggleLikePost);
-router.put('/comment/:postId',userMiddle,postController.commentPost);
-router.get('/getDetail/:postId',userMiddle,postController.getPostDetail);
+router.get('/getDetail/:postId',userMiddle,postController.getPostDetails);
 module.exports = router;

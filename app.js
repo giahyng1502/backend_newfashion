@@ -12,6 +12,8 @@ var cartRouter = require("./routes/cart");
 var voucherRouter = require("./routes/voucher");
 var orderRouter = require("./routes/order");
 var postRouter = require("./routes/post");
+var commentRouter = require("./routes/commentRouter");
+var replyRouter = require("./routes/replyRouter");
 var categoryRouter = require("./routes/category");
 var subCategoryRouter = require("./routes/subCategoryRouter");
 var emailRouter = require("./routes/mailRouter");
@@ -45,6 +47,8 @@ app.use("/subcategory", subCategoryRouter);
 app.use("/mail", emailRouter);
 app.use("/auth", authRouter);
 app.use("/momo", momoRouter);
+app.use("/comment", commentRouter);
+app.use("/reply", replyRouter);
 // app.use("/upload", cloudRouter);
 app.use("/message", messageRouter);
 

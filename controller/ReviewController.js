@@ -1,52 +1,49 @@
 const { uploadImage } = require("../lib/cloudflare");
 const { Review, Product } = require("../models/productModel");
 const reviewController = {
-  addReview: async (req, res) => {
+   addReview : async (req, res) => {
     try {
-      const productId = req.params.productId;
-      const files = req.files;
-      let imageUrls = [];
-      if (files) {
-        imageUrls = await uploadImage(files);
+      const { productId } = req.params;
+      const { content, rate, images } = req.body;
+      const userId = req.user.id;
+
+      // Kiểm tra sản phẩm tồn tại
+      const product = await Product.findById(productId);
+      if (!product) {
+        return res.status(404).json({ message: "Sản phẩm không tồn tại" });
       }
 
-      if (!productId) {
-        return res.status(400).json({ message: "Thiếu productId!" });
-      }
-      const review = new Review({
-        userId: req.user.userId,
-        content: req.body.content,
-        rate: req.body.rating,
-        images: imageUrls,
+      // Tạo review mới
+      const newReview = new Review({
+        content,
+        rate,
+        images,
+        userId
       });
 
-      if (!review) {
-        return res
-          .status(400)
-          .json({ message: "Dữ liệu đánh giá không hợp lệ!" });
-      }
+      // Lưu review vào DB
+      await newReview.save();
 
-      // Lưu đánh giá vào database
-      await review.save();
+      // Cập nhật danh sách review của sản phẩm
+      product.reviews.push(newReview._id);
+      product.rateCount += 1;
 
-      // Thêm review vào danh sách `reviews` trong `Product`
-      const product = await Product.findByIdAndUpdate(
-        productId,
-        { $push: { reviews: review._id } },
-        { new: true } // Trả về dữ liệu mới sau khi cập nhật
-      );
+      // Tính lại rating trung bình
+      const allReviews = await Review.find({ _id: { $in: product.reviews } });
+      const totalRating = allReviews.reduce((sum, r) => sum + r.rate, 0);
+      product.rating = totalRating / product.rateCount;
 
-      if (!product) {
-        return res.status(404).json({ message: "sản phẩm không tồn tại" });
-      }
-      return res
-        .status(200)
-        .json({ message: "Lấy review thành công", data: review });
-    } catch (e) {
-      console.error("Thêm đánh giá thất bại: " + e.message);
-      return res.status(500).json({ message: "Lỗi server", error: e.message });
+      // Lưu cập nhật sản phẩm
+      await product.save();
+
+      return res.status(201).json({ message: "Đánh giá thành công", review: newReview });
+
+    } catch (error) {
+      console.error("Lỗi thêm review:", error);
+      return res.status(500).json({ message: "Lỗi server", error: error.message });
     }
   },
+
   deleteReview: async (req, res) => {
     try {
       const productId = req.params.productId;
