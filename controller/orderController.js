@@ -133,7 +133,7 @@ const orderController = {
                 message: "Lấy thông tin đơn hàng thành công",
                 data: orders,
                 currentPage: page,
-                totalPages: Math.ceil(totalOrder / limit),
+                totalOrder: Math.ceil(totalOrder / limit),
                 totalProducts: totalOrder
             });
         } catch (e) {

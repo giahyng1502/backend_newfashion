@@ -1,43 +1,50 @@
 const mongoose = require("mongoose");
-const { Information } = require("../models/userModel");
+const { Information, User} = require("../models/userModel");
 
 const InformationController = {
-    // Lấy thông tin người dùng theo userId
-    getUserInformation: async (req, res) => {
-        try {
-            const userId = req.user.userId;
-            const info = await Information.find({ userId });
-
-            if (!info) {
-                return res.status(404).json({ message: "Không tìm thấy thông tin người dùng" });
-            }
-
-            return res.status(200).json({ message: "Lấy thông tin thành công", data: info });
-        } catch (error) {
-            console.error("Lỗi lấy thông tin người dùng:", error.message);
-            return res.status(500).json({ message: "Lỗi server", error: error.message });
-        }
-    },
 
     // Cập nhật hoặc thêm mới thông tin người dùng
     upsertInformation: async (req, res) => {
         try {
-            const userId = req.user.userId;
-            const inforId = req.params.inforId;
+            const userId = req.user.userId; // ID của user
+            const inforId = req.params.inforId; // ID của thông tin (nếu có)
             const { address, phoneNumber, name } = req.body;
 
-            const updatedInfo = await Information.findOneAndUpdate(
-                { userId, _id: inforId }, // Điều kiện tìm kiếm
-                { $set: { address, phoneNumber, name } }, // Cập nhật
-                { new: true, upsert: true } // Trả về bản ghi đã cập nhật hoặc tạo mới nếu chưa có
-            );
+            let updatedInfo;
 
-            return res.status(200).json({ message: "Cập nhật thông tin thành công", data: updatedInfo });
+            if (inforId) {
+                // Nếu đã có ID => Cập nhật thông tin
+                updatedInfo = await Information.findByIdAndUpdate(
+                    inforId,
+                    { $set: { address, phoneNumber, name } },
+                    { new: true } // Trả về bản ghi đã cập nhật
+                );
+            }
+
+            if (!updatedInfo) {
+                // Nếu không tìm thấy thông tin, tạo mới
+                updatedInfo = new Information({ address, phoneNumber, name });
+                await updatedInfo.save();
+
+                // Cập nhật vào user
+                await User.findByIdAndUpdate(
+                    userId,
+                    { $push: { information: updatedInfo._id } },
+                    { new: true }
+                );
+            }
+
+            return res.status(200).json({
+                message: "Cập nhật thông tin thành công",
+                data: updatedInfo
+            });
+
         } catch (error) {
             console.error("Lỗi cập nhật thông tin:", error.message);
             return res.status(500).json({ message: "Lỗi server", error: error.message });
         }
     },
+
 
     // Thêm thông tin mới
     addInfor: async (req, res) => {
@@ -47,7 +54,9 @@ const InformationController = {
 
             const info = new Information({ address, phoneNumber, name, userId });
             await info.save(); // Lưu vào database
-
+            const updateUser = await User.findByIdAndUpdate(userId,{
+                $push: { information: info._id }
+            })
             return res.status(201).json({ message: "Thêm thông tin thành công", data: info });
         } catch (error) {
             console.error("Lỗi thêm thông tin:", error.message);
@@ -71,7 +80,9 @@ const InformationController = {
             if (!info) {
                 return res.status(404).json({ message: "Không tìm thấy thông tin để xóa" });
             }
-
+            const updateUser = await User.findByIdAndUpdate(userId,{
+                $pull: { information: informationId }
+            })
             return res.status(200).json({ message: "Xóa thông tin thành công" });
         } catch (error) {
             console.error("Lỗi xóa thông tin:", error.message);

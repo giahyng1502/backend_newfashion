@@ -57,7 +57,7 @@ const cartController = {
 
                 // 🔍 Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
                 const index = cart.products.findIndex(p =>
-                    p.productId.equals(productId) && p.size === size && p.color === color
+                    p.productId.equals(productId) && p.size === size && p.color.nameColor === color.nameColor
                 );
 
                 if (index === -1) {

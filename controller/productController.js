@@ -82,7 +82,7 @@ const productController = {
         return res.status(400).json({ error: "Không có file nào được chọn" });
       }
 
-      let { name, price, description, size, color, subCategory,stock } = req.body;
+      let { name, price, description, size, color , subCategory,stock } = req.body;
 
       if (!name || !price || !description || !size || !color || !subCategory || !stock) {
         return res.status(400).json({ error: "Không được bỏ trống các trường" });
@@ -91,27 +91,9 @@ const productController = {
       if (!subCate) {
         return res.status(400).json({message : 'subCategory không tồn tại'})
       }
-      // Chuyển đổi từ chuỗi JSON sang Object / Array
-      try {
-        description = JSON.parse(description);
-        size = JSON.parse(size);
-        color = JSON.parse(color);
-      } catch (error) {
-        return res.status(400).json({ error: "Dữ liệu không đúng định dạng JSON" });
-      }
 
-      if (!Array.isArray(size) || !Array.isArray(color)) {
-        return res.status(400).json({ error: "Size và Color phải là mảng" });
-      }
-
-      if (typeof description !== "object") {
-        return res.status(400).json({ error: "Mô tả sản phẩm phải là một object" });
-      }
-
-      // Upload hình ảnh
       const imageUrls = await uploadImage(req.files);
 
-      // Tạo sản phẩm mới
       const newProduct = new Product({
         name,
         price,

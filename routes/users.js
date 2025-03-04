@@ -7,7 +7,11 @@ var router = express.Router();
 
 /* GET users listing. */
 router.get('/getAll',verifyAdmin,UserController.getUsers)
+router.post('/checkEmail',UserController.getUserByEmail)
+
 router.post('/register',UserController.register);
+router.put('/adminUpdateUser/:id',verifyAdmin,UserController.adminUpdateUser);
+
 router.post('/login',UserController.login);
 router.put('/update',userMiddle,upload.array('files',1),UserController.updateUser);
 

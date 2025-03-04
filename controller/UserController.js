@@ -17,12 +17,11 @@ const UserController = {
 
             // Tính tổng số user để biết tổng số trang
             const totalUsers = await User.countDocuments({});
-            const totalPages = Math.ceil(totalUsers / limit);
 
             return res.status(200).json({
                 message: "Lấy thông tin người dùng thành công",
                 data: users,
-                totalPages: totalPages,
+                totalUsers: totalUsers,
                 currentPage: page,
             });
 
@@ -34,6 +33,37 @@ const UserController = {
             });
         }
     },
+
+    searchUsers : async (req, res) => {
+        try {
+            const { query } = req.query; // Lấy query từ URL
+
+            if (!query) {
+                return res.status(400).json({ message: "Vui lòng nhập từ khóa tìm kiếm" });
+            }
+
+            let users;
+            if (query.match(/^[0-9a-fA-F]{24}$/)) {
+                // Nếu query là ObjectId hợp lệ, tìm theo _id (tìm chính xác)
+                users = await User.find({ _id: query });
+            } else {
+                // Tìm kiếm gần đúng theo tên (Không phân biệt hoa thường)
+                users = await User.find({
+                    name: { $regex: query, $options: "i" }
+                });
+            }
+            if (users.length === 0) {
+                return res.status(404).json({ message: "Không tìm thấy người dùng" });
+            }
+
+            return res.status(200).json({ users });
+        } catch (err) {
+            console.error("Lỗi server:", err.message);
+            return res.status(500).json({ message: "Lỗi server" });
+        }
+    },
+
+
     register: async (req, res) => {
         try {
             const { name, email, password } = req.body;
@@ -54,7 +84,7 @@ const UserController = {
             return res.status(500).json({ message: "Lỗi server", error: err.message });
         }
     },
-        updateUser: async (req, res) => {
+    updateUser: async (req, res) => {
             try {
                 const userId = req.user.userId;
                 const { name, password } = req.body;
@@ -108,7 +138,60 @@ const UserController = {
             }
         },
 
+     adminUpdateUser : async (req, res) => {
+        try {
+            const userId = req.params.id;
+            const { name, email, password, point, balance, role } = req.body;
 
+            // Kiểm tra user có tồn tại không
+            const user = await User.findById(userId);
+            if (!user) {
+                return res.status(404).json({ message: "Người dùng không tồn tại" });
+            }
+
+            let hashPass = user.password; // Giữ nguyên mật khẩu cũ
+            if (password) {
+                hashPass = await bcrypt.hash(password, 12); // Chỉ hash nếu có mật khẩu mới
+            }
+
+            // Cập nhật user
+            const updatedUser = await User.findByIdAndUpdate(
+                userId,
+                {
+                    name,
+                    email,
+                    password: hashPass,
+                    point,
+                    balance,
+                    role,
+                },
+                { new: true } // Trả về bản ghi sau khi cập nhật
+            );
+
+            return res.status(200).json({
+                message: "Cập nhật người dùng thành công",
+                user: updatedUser,
+            });
+        } catch (err) {
+            console.error("Lỗi server:", err.message);
+            return res.status(500).json({ message: err.message });
+        }
+    },
+
+
+    getUserByEmail: async (req, res) => {
+      try{
+          const user = await User.findOne({email: req.body.email}).select('name avatar');
+          if (!user) {
+              return res.status(401).json({message:"Người dùng không tồn tại"});
+          }
+          const { _id, ...currentUser } = user._doc;
+          return res.status(200).json({message : 'Vui lòng nhập mật khẩu để hoàn tất đăng nhập',data : currentUser});
+      }catch(err){
+          console.log("lỗi sever "+err.message)
+          return res.status(500).json({message:err.message});
+      }
+    },
     login : async (req, res) => {
         try{
             const {email,password} = req.body;

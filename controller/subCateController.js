@@ -74,7 +74,7 @@ const subCateController = {
         try {
             const id = req.params.id;
             const product = await Product.findOne({
-                category : id
+                subCategory : id
             })
             if (product) {
                 return res.status(401).json({message : 'Không thể xóa subcategory này vì vẫn còn tồn tại sản phẩm'})

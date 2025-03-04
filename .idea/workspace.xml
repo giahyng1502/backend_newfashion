@@ -4,21 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Sửa chức năng post bài viết cho phép admin có thể upload ảnh">
-      <change afterPath="$PROJECT_DIR$/controller/commentController.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/controller/replyController.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/routes/commentRouter.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/routes/replyRouter.js" afterDir="false" />
+    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Thay đổi model post và cập nhập chức năng like comment , reply comment và like comment bài viết">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/ReviewController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/ReviewController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/categoryController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/categoryController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/postController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/postController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/postModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/postModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/UserController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/UserController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/cartController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/cartController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/informationController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/informationController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/orderController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/orderController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/productController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/productController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/subCateController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/subCateController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/cartModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/cartModel.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/productModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/productModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/category.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/category.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/post.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/post.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/subCategoryRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/subCategoryRouter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/userModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/userModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/informationRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/informationRouter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,7 +103,14 @@
       <workItem from="1738937114741" duration="1268000" />
       <workItem from="1739332752080" duration="12450000" />
       <workItem from="1740117125734" duration="23061000" />
-      <workItem from="1740295239259" duration="19292000" />
+      <workItem from="1740295239259" duration="39905000" />
+      <workItem from="1740732286147" duration="1217000" />
+      <workItem from="1740836020447" duration="481000" />
+      <workItem from="1740909838398" duration="7919000" />
+      <workItem from="1740978133794" duration="1613000" />
+      <workItem from="1740983759207" duration="25000" />
+      <workItem from="1741012546281" duration="2143000" />
+      <workItem from="1741103456760" duration="4645000" />
     </task>
     <task id="LOCAL-00001" summary="Hoàn thiện chức năng thêm , cập nhập sản phẩm , và review sản phẩm">
       <option name="closed" value="true" />
@@ -251,7 +256,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740302463739</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Thay đổi model post và cập nhập chức năng like comment , reply comment và like comment bài viết">
+      <option name="closed" value="true" />
+      <created>1740382247891</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1740382247891</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -276,6 +289,7 @@
     <MESSAGE value="Giới hạn số lượng người data trả về cho người dùng bằng phân trang" />
     <MESSAGE value="thêm chức năng crud địa chỉ người nhận hàng và chức năng upload avatar , đổi mật khẩu , cập nhập thông tin cá nhân" />
     <MESSAGE value="Sửa chức năng post bài viết cho phép admin có thể upload ảnh" />
-    <option name="LAST_COMMIT_MESSAGE" value="Sửa chức năng post bài viết cho phép admin có thể upload ảnh" />
+    <MESSAGE value="Thay đổi model post và cập nhập chức năng like comment , reply comment và like comment bài viết" />
+    <option name="LAST_COMMIT_MESSAGE" value="Thay đổi model post và cập nhập chức năng like comment , reply comment và like comment bài viết" />
   </component>
 </project>

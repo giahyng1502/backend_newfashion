@@ -11,10 +11,6 @@ const informationSchema = new mongoose.Schema({
         required: true,
         default: 0,
     },
-    userId : {
-        type: mongoose.Schema.ObjectId,
-        required: true,
-    },
     name : {
         type: String,
         required: true,
@@ -54,7 +50,14 @@ const userSchema = new mongoose.Schema({
         type: Number,
         required: true,
         default: 0
+    },
+    information : [
+    {
+        type : mongoose.Schema.ObjectId,
+        ref: "Information",
+        default: []
     }
+    ]
 }, { timestamps: true });
 const Information = mongoose.model('Information', informationSchema);
 const User = mongoose.model('User', userSchema);

@@ -28,6 +28,7 @@ const reviewSchema = mongoose.Schema({
     ref: "User",
     required: true,
   },
+
   rate: {
     type: Number,
     min: 0,
@@ -67,6 +68,11 @@ const productSchema = new mongoose.Schema({
     min: 0,
     default: 0,
   },
+  cost : {
+    type: Number,
+    required: true,
+    default: 0,
+  },
   stock : {
     type: Number,
     required: true,
@@ -90,10 +96,18 @@ const productSchema = new mongoose.Schema({
     type: [mongoose.Schema.ObjectId],
     ref: "Review",
   },
-  color: {
-    type: [String],
-    required: true,
-  },
+  color: [
+    {
+      imageColor : {
+        type: String,
+        required: true,
+      },
+      nameColor : {
+        type: String,
+        required: true,
+      }
+    }
+  ],
   size: {
     type: [String],
     required: true,
