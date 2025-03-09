@@ -85,7 +85,7 @@ const cartController = {
     updateCart: async (req, res) => {
         try {
             const userId = req.user.userId;
-            const { productInCartId, quantity, size, color } = req.body;
+            const { productInCartId, quantity, size, color,isSelected } = req.body;
 
             // Kiểm tra nếu quantity không hợp lệ
             if (isNaN(quantity) || quantity < 0) {
@@ -131,6 +131,7 @@ const cartController = {
                 cart.products[index].quantity = quantity;
                 cart.products[index].size = size;
                 cart.products[index].color = color;
+                cart.products[index].isSelected = isSelected;
                 cart.products[index].price = product.price * (1 - discount / 100); // Cập nhật giá sau giảm giá
             }
 
@@ -151,21 +152,23 @@ const cartController = {
     removeFromCart: async (req, res) => {
         try {
             const userId = req.user.userId;
-            const { productInCartId } = req.params;
-
             let cart = await Cart.findOne({ userId });
             if (!cart) {
                 return res.status(404).json({ message: "Giỏ hàng không tồn tại" });
             }
 
+            const initialProductCount = cart.products.length;
             // Lọc bỏ sản phẩm cần xóa
-            cart.products = cart.products.filter(p => !p._id.equals(productInCartId));
-
+            cart.products = cart.products.filter(p => p.isSelected === false);
+            const deletedCount = initialProductCount - cart.products.length;
+            if (deletedCount === 0) {
+                return res.status(400).json({message : 'Vui lòng chọn sản phẩm muốn xóa'})
+            }
             // Cập nhật tổng tiền
             cart.total = await calculateTotalPrice(cart.products);
 
             await cart.save();
-            return res.status(200).json({ message: "Xóa sản phẩm khỏi giỏ hàng thành công", cart });
+            return res.status(200).json({ message: `Xóa ${deletedCount} sản phẩm khỏi giỏ hàng thành công`, cart });
         } catch (e) {
             console.error("Xóa sản phẩm thất bại: " + e.message);
             return res.status(500).json({ message: "Lỗi server", error: e.message });

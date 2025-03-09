@@ -72,8 +72,12 @@ const orderSchema = mongoose.Schema({
                 required: true,
             },
             color : {
-              type: String,
-              required: true,
+                imageColor : {
+                    type: String,
+                },
+                nameColor : {
+                    type: String,
+                }
             },
             quantity: {
                 type: Number,

@@ -17,14 +17,20 @@ const orderController = {
                 }
 
                 // Tìm giỏ hàng của user
-                const cart = await Cart.findOne({userId: userId}).populate('products.productId');
+                let cart = await Cart.findOne({userId: userId}).populate('products.productId');
                 if (!cart || cart.products.length === 0) {
                     return res.status(400).json({message: 'Giỏ hàng trống'});
+                }
+                // Lọc sản phẩm được chọn để tạo đơn hàng
+                const selectedCart = cart.products.filter(item => item.isSelected === true);
+
+                if (selectedCart.length === 0) {
+                    return res.status(400).json({ message: 'Không có sản phẩm nào được chọn' });
                 }
 
                 // Tính tổng tiền sản phẩm trong giỏ hàng
                 let totalPrice = 0;
-                for (const item of cart.products) {
+                for (const item of selectedCart) {
                     let productPrice = item.productId.price * item.quantity;
 
                     // Kiểm tra sản phẩm có trong SaleProduct (sản phẩm giảm giá không)
@@ -83,7 +89,7 @@ const orderController = {
                     await user.save();
                 }
 
-                const items = cart.products.map(item => ({
+                const items = selectedCart.map(item => ({
                     productName: item.productId.name,
                     price: item.productId.price * item.quantity,
                     size: item.size,
@@ -107,7 +113,11 @@ const orderController = {
                 });
 
                 await order.save();
-                await Cart.findOneAndDelete({userId: userId});
+                // xóa những sản phẩm đã được select
+                cart.products = cart.products.filter(item => item.isSelected === false);
+
+                    cart.total = cart.products.reduce((sum, item) => sum + item.price * item.quantity, 0);
+                    await cart.save();
 
                 return res.status(201).json({message: "Đơn hàng đã được tạo thành công", order});
 
@@ -122,12 +132,12 @@ const orderController = {
     getAll: async (req, res) => {
         try {
             const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 1;
+            const limit = parseInt(req.query.limit) || 10;
 
             const skip = (page - 1) * limit;
 
             const totalOrder = await Order.countDocuments();
-            const orders = await Order.find().skip(skip).limit(limit);
+            const orders = await Order.find().skip(skip).limit(limit).populate('statusHistory.updatedBy',"name avatar role");
 
             return res.status(200).json({
                 message: "Lấy thông tin đơn hàng thành công",

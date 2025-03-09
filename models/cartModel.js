@@ -6,6 +6,10 @@ const cartSchema = mongoose.Schema({
                 type : mongoose.Schema.ObjectId,
                 ref : "Product",
             },
+            isSelected : {
+                type : Boolean,
+                default : false
+            },
             disCountSale : {
                 type : Number,
                 min : 0,
