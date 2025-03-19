@@ -9,4 +9,6 @@ router.get('/getAll',orderController.getAll);
 router.get('/getOrderUser',userMiddle,orderController.getOrderById);
 router.put('/cancel/:orderId',userMiddle,orderController.cancelOrder);
 router.put('/update/:orderId',verifyAdmin,orderController.updateStatus);
+router.get('/search',verifyAdmin,orderController.searchOrderByUser);
+
 module.exports = router;

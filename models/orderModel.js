@@ -38,6 +38,10 @@ const orderSchema = mongoose.Schema({
         type: Number,
         default: 0,
     },
+    momo : {
+      type: Boolean,
+      default: false,
+    },
     shippingAddress: {
         address: {
             type: String,

@@ -19,7 +19,7 @@ var subCategoryRouter = require("./routes/subCategoryRouter");
 var emailRouter = require("./routes/mailRouter");
 var authRouter = require("./routes/authRouter");
 var momoRouter = require("./routes/momoRouter");
-// var cloudRouter = require("./routes/cloudRouter");
+var cloudRouter = require("./routes/cloudRouter");
 var messageRouter = require("./routes/messageRouter");
 
 var { app } = require("./lib/socketConfig");
@@ -49,7 +49,7 @@ app.use("/auth", authRouter);
 app.use("/momo", momoRouter);
 app.use("/comment", commentRouter);
 app.use("/reply", replyRouter);
-// app.use("/upload", cloudRouter);
+app.use("/upload", cloudRouter);
 app.use("/message", messageRouter);
 
 // catch 404 and forward to error handler

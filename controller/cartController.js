@@ -86,7 +86,7 @@ const cartController = {
         try {
             const userId = req.user.userId;
             const { productInCartId, quantity, size, color,isSelected } = req.body;
-
+            console.log(req.body)
             // Kiểm tra nếu quantity không hợp lệ
             if (isNaN(quantity) || quantity < 0) {
                 return res.status(400).json({ message: "Số lượng không hợp lệ" });

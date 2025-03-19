@@ -8,7 +8,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get("/", productController.getAll);
-router.post("/addProduct", upload.array('files',5),productController.addProduct);
+router.post("/addProduct",productController.addProduct);
 router.get("/getOne/:productId", productController.getOne);
 router.put(
   "/putReview/:productId",
@@ -16,7 +16,8 @@ router.put(
   upload.array("files", 5),
   reviewController.addReview
 );
-router.put("/updateProduct/:productId",upload.array('files',5) ,productController.updateProduct);
+router.put("/updateProduct/:productId",productController.updateProduct);
 router.put("/deleteReview/:productId", ReviewController.deleteReview);
+router.get("/search", productController.searchProduct);
 
 module.exports = router;

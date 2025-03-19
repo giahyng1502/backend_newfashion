@@ -2,6 +2,7 @@ const {uploadImage} = require("../lib/cloudflare");
 const {Category, SubCategory} = require("../models/categoryModel");
 const {Product} = require("../models/productModel");
 const subCateController = {
+    //
     addSubCategories: async (req, res) => {
         try {
             const {subCateName,categoryId} = req.body;
@@ -69,6 +70,20 @@ const subCateController = {
             return res.status(500).json({message : 'Lỗi khi lấy subcate theo category'+err.toString()});
 
         }
+    },
+    getAllSubCategories : async (req, res) => {
+      try {
+          const subcate = await SubCategory.find();
+          if (!subcate) {
+              return res.status(400).json({message : 'Không có subcate nào tồn tại'})
+          }
+          return res.status(200).json({
+              data : subcate,
+              message : 'lấy danh mục sản phẩm thành công'
+          })
+      }  catch (e) {
+          return res.status(500).json(e.message);
+      }
     },
     deleteSubCategories: async (req, res) => {
         try {

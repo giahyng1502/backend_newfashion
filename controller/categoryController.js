@@ -39,7 +39,7 @@ const categoryController = {
             data: categories,
           });
     } catch (e) {
-      console.error("Lỗi khi lấy danh mục: " + e.message);
+      console.error("Lỗi khi lấy danh mục : " + e.message);
       return res.status(500).json({message: "Lỗi server", error: e.message});
     }
   },

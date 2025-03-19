@@ -17,6 +17,21 @@ const informationSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
+const userVoucherSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
+    voucherId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Voucher",
+        required: true
+    },
+});
+
+
+
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -61,5 +76,5 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 const Information = mongoose.model('Information', informationSchema);
 const User = mongoose.model('User', userSchema);
-
-module.exports = { User, Information };
+const UserVoucher = mongoose.model("UserVoucher", userVoucherSchema);
+module.exports = { User, Information ,UserVoucher};

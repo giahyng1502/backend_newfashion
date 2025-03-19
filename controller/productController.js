@@ -78,28 +78,23 @@ const productController = {
   },
    addProduct : async (req, res) => {
     try {
-      if (!req.files || req.files.length === 0) {
-        return res.status(400).json({ error: "Không có file nào được chọn" });
-      }
+      let { name, price, description, size, color ,cost, subCategory,stock,image } = req.body;
 
-      let { name, price, description, size, color , subCategory,stock } = req.body;
-
-      if (!name || !price || !description || !size || !color || !subCategory || !stock) {
+      if (!name || !price || !description || !size || !color || !subCategory || !stock || !cost ||!image) {
+        console.log(req.body)
         return res.status(400).json({ error: "Không được bỏ trống các trường" });
       }
       const subCate = await SubCategory.findById(subCategory)
       if (!subCate) {
         return res.status(400).json({message : 'subCategory không tồn tại'})
       }
-
-      const imageUrls = await uploadImage(req.files);
-
+      const newSize = size.split(',')
       const newProduct = new Product({
         name,
         price,
         subCategory,
-        size,
-        image: imageUrls,
+        size : newSize,
+        image,
         color,
         stock,
         description,
@@ -119,7 +114,7 @@ const productController = {
    updateProduct : async (req, res) => {
     try {
       const id = req.params.productId;
-      let { name, price, description, size, color, subCategory, stock } = req.body;
+        let { name, price, description, size, color, subCategory, stock ,cost,image} = req.body;
       const updateFields = {}; // Chứa các trường cần update
 
       if (subCategory) {
@@ -134,7 +129,6 @@ const productController = {
       try {
         if (description) updateFields.description = JSON.parse(description);
         if (size) updateFields.size = JSON.parse(size);
-        if (color) updateFields.color = JSON.parse(color);
       } catch (error) {
         return res.status(400).json({ error: "Dữ liệu không đúng định dạng JSON" });
       }
@@ -143,10 +137,18 @@ const productController = {
       if (stock !== undefined) {
         updateFields.stock = Number(stock);
       }
+      if (cost !== undefined) {
+        updateFields.cost = Number(cost);
+      }
 
       // Upload hình ảnh nếu có
-      if (req.files && req.files.length > 0) {
-        updateFields.image = await uploadImage(req.files);
+      if (color) {
+        updateFields.color = color;
+      }
+      if (image) {
+        if (image.length > 0) {
+          updateFields.image = image;
+        }
       }
 
       // Chỉ cập nhật nếu trường đó tồn tại
@@ -167,7 +169,35 @@ const productController = {
       console.error("Cập nhật sản phẩm thất bại:", e.message);
       return res.status(500).json({ message: "Lỗi server", error: e.message });
     }
+  },
+  searchProduct: async (req, res) => {
+    try {
+      const key = req.query.key; // Lấy từ query parameter
+      if (!key) {
+        return res.status(400).json({ message: "Vui lòng nhập từ khóa tìm kiếm" });
+      }
+
+      // Tìm theo ID nếu key là ObjectId
+      let product = await Product.findById(key).catch(() => null);
+      if (product) {
+        return res.status(200).json({ message: "Lấy thông tin sản phẩm thành công", data: product });
+      }
+
+      // Tìm kiếm theo tên (case-insensitive)
+      const products = await Product.find({ name: { $regex: key, $options: "i" } });
+
+      if (products.length === 0) {
+        return res.status(404).json({ message: "Không tìm thấy sản phẩm" });
+      }
+
+      return res.status(200).json({ message: "Lấy danh sách sản phẩm thành công", data: products });
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ message: "Lỗi hệ thống: " + e.toString() });
+    }
   }
+
+
 
 
 };

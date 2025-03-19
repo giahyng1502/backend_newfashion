@@ -8,7 +8,7 @@ const allowedStatus = [0, 1, 2, 3, 4, 5];
 const orderController = {
         create: async (req, res) => {
             try {
-                const {address, phoneNumber,name, voucherId, point} = req.body;
+                const {address, phoneNumber,name, voucherId, point,momo} = req.body;
                 const userId = req.user.userId;
                 let disCountSale = 0;
                 const user = await User.findById(userId);
@@ -265,7 +265,39 @@ const orderController = {
             console.log("Lỗi xẩy ra khi cập nhập trạng thái đơn hàng"+e.message);
             return res.status(500).json({message : 'Lỗi sever',error: e.message});
         }
+    },
+    searchOrderByUser: async (req, res) => {
+        try {
+            const { email, userId } = req.query; // Lấy email hoặc userId từ query
+
+            if (!email && !userId) {
+                return res.status(400).json({ message: "Vui lòng nhập email hoặc userId để tìm kiếm" });
+            }
+
+            let user;
+            if (email) {
+                user = await User.findOne({ email }); // Tìm user theo email
+                if (!user) {
+                    return res.status(404).json({ message: "Không tìm thấy người dùng với email này" });
+                }
+            }
+
+            const orders = await Order.find({
+                userId: userId || user._id // Nếu có userId thì tìm theo userId, nếu không thì lấy _id của user từ email
+            });
+
+            if (orders.length === 0) {
+                return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
+            }
+
+            return res.status(200).json({ orders });
+        } catch (err) {
+            console.error("Lỗi server:", err.message);
+            return res.status(500).json({ message: "Lỗi server" });
+        }
     }
+
+
 };
 
 module.exports = orderController;

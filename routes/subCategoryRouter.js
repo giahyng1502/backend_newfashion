@@ -5,6 +5,7 @@ const {upload} = require("../lib/cloudflare");  // Import middleware kiểm tra 
 var router = express.Router();
 //
 router.get('/:categoryId', subCategoryController.getSubCateByCategory);  // Lấy danh sách danh mục
+router.get('/getSubCate/getAll', subCategoryController.getAllSubCategories);  // Lấy danh sách danh mục
 
 router.post('/', verifyAdmin,upload.array('files',1), subCategoryController.addSubCategories);
 router.put('/:id', verifyAdmin,upload.array('files',1), subCategoryController.updateSubCategories);

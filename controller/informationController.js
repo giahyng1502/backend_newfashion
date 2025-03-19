@@ -68,7 +68,7 @@ const InformationController = {
     deleteInformation: async (req, res) => {
         try {
             const userId = req.user.userId;
-            const informationId = req.params.id;
+            const informationId = req.params.inforId;
 
             // Kiểm tra ID hợp lệ
             if (!mongoose.Types.ObjectId.isValid(informationId)) {

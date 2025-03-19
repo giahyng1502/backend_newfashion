@@ -12,12 +12,11 @@ const UserController = {
             // Lấy danh sách user theo phân trang
             const users = await User.find({})
                 .populate("information")
-                .skip(skip)
+                .skip(skip).select('-password')
                 .limit(limit);
 
             // Tính tổng số user để biết tổng số trang
             const totalUsers = await User.countDocuments({});
-
             return res.status(200).json({
                 message: "Lấy thông tin người dùng thành công",
                 data: users,
@@ -34,24 +33,34 @@ const UserController = {
         }
     },
 
-    searchUsers : async (req, res) => {
+    searchUsers: async (req, res) => {
         try {
-            const { query } = req.query; // Lấy query từ URL
+            const { name, email, id } = req.query; // Lấy tham số tìm kiếm từ query
 
-            if (!query) {
+            if (!name && !email && !id) {
                 return res.status(400).json({ message: "Vui lòng nhập từ khóa tìm kiếm" });
             }
 
-            let users;
-            if (query.match(/^[0-9a-fA-F]{24}$/)) {
-                // Nếu query là ObjectId hợp lệ, tìm theo _id (tìm chính xác)
-                users = await User.find({ _id: query });
-            } else {
-                // Tìm kiếm gần đúng theo tên (Không phân biệt hoa thường)
-                users = await User.find({
-                    name: { $regex: query, $options: "i" }
-                });
+            let query = {};
+
+            // Nếu có ID và ID hợp lệ, tìm theo ID trước
+            if (id && id.match(/^[0-9a-fA-F]{24}$/)) {
+                query._id = id;
             }
+
+            // Nếu có name, tìm theo name (không phân biệt hoa thường)
+            if (name) {
+                query.name = { $regex: name, $options: "i" };
+            }
+
+            // Nếu có email, tìm theo email (chính xác)
+            if (email) {
+                query.email = email;
+            }
+
+            // Tìm kiếm người dùng với điều kiện trên
+            const users = await User.find(query);
+
             if (users.length === 0) {
                 return res.status(404).json({ message: "Không tìm thấy người dùng" });
             }
@@ -62,6 +71,7 @@ const UserController = {
             return res.status(500).json({ message: "Lỗi server" });
         }
     },
+
 
 
     register: async (req, res) => {
@@ -75,7 +85,19 @@ const UserController = {
 
                 user = new User({ name, email: normalizedEmail, password: hashPass });
                 const saveUser = await user.save();
-                return res.status(200).json({ message: 'Đăng ký tài khoản thành công', data: saveUser });
+                if (!saveUser) {
+                    return res.status(400).json({message : 'Tạo tài khoản thất bại'})
+                    }
+                const userCheck = await User.findOne({email: email});
+                if (user) {
+                    const token = jwt.sign({
+                        userId: user.id,
+                        email: user.email,
+                        name: user.name,
+                        role: user.role,
+                    },process.env.JWT_SECRET, {expiresIn: '30d'});
+                    return res.status(200).json({message : 'Đăng nhập thành công', token: token,data :userCheck });
+                }
             }
             return res.status(400).json({ message: 'Email này đã tồn tại trên hệ thống' });
 
@@ -191,6 +213,21 @@ const UserController = {
           console.log("lỗi sever "+err.message)
           return res.status(500).json({message:err.message});
       }
+    },
+    getMe : async (req, res) => {
+        try {
+            const id = req.user.userId;
+            const user = await User.findOne({_id: id}).populate('information').select('-password -role')
+            if (!user) {
+                return res.status(401).json({message : 'Người dùng không tồn tại'});
+            }
+            return res.status(200).json({message:'lấy dữ liệu người dùng thành công',data : user});
+        }catch(err){
+            console.log(err);
+
+            return res.status(500).json({message:err.message});
+        }
+
     },
     login : async (req, res) => {
         try{
