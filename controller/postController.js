@@ -6,7 +6,7 @@ const postController = {
     // 1. Tạo bài viết
     createPost: async (req, res) => {
         try {
-            const { content ,product} = req.body;
+            const { content ,product,hashtag} = req.body;
             const files = req.files;
             const user = req.user.userId;
 
@@ -23,8 +23,8 @@ const postController = {
                 content,
                 product,
                 image: image,
+                hashtag : hashtag,
             });
-
             await newPost.save();
             return res.status(201).json({ message: 'Tạo bài viết thành công', data : newPost });
         } catch (error) {
@@ -36,22 +36,30 @@ const postController = {
     // 2. Lấy danh sách bài viết
     getAllPosts: async (req, res) => {
         try {
-            const posts = await Post.find({});
-            const result = posts.map((post) => {
+            const userId = req.user.userId;
+            const posts = await Post.find({})
+                .populate("user", "name avatar") // ✅ Lấy thông tin user
+                .populate("product", "sold rateCount"); // ✅ Lấy thông tin sản phẩm
 
-            })
-            return res.status(200).json({ message: 'Lấy danh sách bài viết thành công', data : posts });
+            // Duyệt qua từng bài post và thêm `isLike`
+            const data = posts.map((post) => ({
+                ...post.toObject(), // Chuyển document Mongoose thành object thuần
+                isLike: post.likes.includes(userId), // So sánh với `userId`
+            }));
+
+            return res.status(200).json({ message: 'Lấy danh sách bài viết thành công', data });
         } catch (error) {
             console.error("Lỗi khi lấy danh sách bài viết:", error);
             return res.status(500).json({ message: 'Lỗi server', error: error.message });
         }
     },
 
+
     // 3. Chỉnh sửa bài viết
     updatePost: async (req, res) => {
         try {
             const { postId } = req.params;
-            const { content } = req.body;
+            const { content ,hashtag} = req.body;
             const files = req.files;
 
             let image;
@@ -64,6 +72,7 @@ const postController = {
             }
             post.content = content || post.content;
             post.image = image || post.image;
+            post.hashtag = hashtag || post.hashtag;
             await post.save();
 
             return res.status(200).json({ message: 'Cập nhật bài viết thành công', data : post });
@@ -175,6 +184,21 @@ const postController = {
         } catch (error) {
             console.error("Lỗi lấy bài viết:", error);
             return res.status(500).json({ message: "Lỗi server", error: error.message });
+        }
+    },
+    searchPostByHashtag: async (req, res) => {
+        try {
+            const hashtag = req.query.hashtag;
+            const posts = await Post.find({
+                hashtag : {$regex : hashtag,$options : 'i'},
+            })
+            if (posts.length === 0) {
+                return res.status(404).json({message : 'Không tìm thấy bài viết nào tồn tại'})
+            }
+            return res.status(200).json({ posts: posts });
+        }catch (e) {
+            console.log(e)
+            return res.status(500).json({message : 'Lỗi server : ',error: e});
         }
     }
 

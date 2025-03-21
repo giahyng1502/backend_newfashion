@@ -10,6 +10,7 @@ router.delete('/delete/:postId',verifyAdmin,postController.deletePost);
 router.put('/update/:postId',verifyAdmin,upload.array('files',5),postController.updatePost);
 
 router.get('/getAll',userMiddle,postController.getAllPosts);
+router.get('/search',postController.searchPostByHashtag);
 router.put('/toggleLikePost/:postId',userMiddle,postController.toggleLikePost);
 router.get('/getDetail/:postId',userMiddle,postController.getPostDetails);
 module.exports = router;

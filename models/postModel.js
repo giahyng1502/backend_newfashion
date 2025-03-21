@@ -58,6 +58,10 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    hashtag : {
+      type: String,
+      required: true,
+    },
     image: {
         type: [String], // Mảng chứa URL ảnh
         default: [],
