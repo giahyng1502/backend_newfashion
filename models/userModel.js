@@ -11,8 +11,18 @@ const informationSchema = new mongoose.Schema({
         required: true,
         default: 0,
     },
+    isDefault : {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
     name : {
         type: String,
+        required: true,
+    },
+    user : {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
         required: true,
     }
 }, { timestamps: true });
