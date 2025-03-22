@@ -2,6 +2,7 @@ const { Product, Review} = require("../models/productModel");
 const {uploadImage} = require("../lib/cloudflare");
 const {SubCategory} = require("../models/categoryModel");
 const SaleProduct = require("../models/SaleProduct");
+const {Types} = require("mongoose");
 const productController = {
   getProductNotInSale: async (req, res) => {
     try {
@@ -64,49 +65,62 @@ const productController = {
   getOne: async (req, res) => {
     try {
       const productId = req.params.productId;
-      let page = parseInt(req.query.page) || 1;
-      let limit = parseInt(req.query.limit) || 5;
-      let skip = (page - 1) * limit;
 
-      const product = await Product.findById(productId)
-          .populate({
-            path: "reviews",
-            options: { limit: limit, skip: skip }, // Áp dụng phân trang cho review
-            populate: {
-              path: "userId",
-              select: "name avatar",
-            },
-          });
-
-      // Tính tổng số review để biết tổng số trang
-      const totalReviews = await Review.countDocuments({ productId });
-      const totalPages = Math.ceil(totalReviews / limit);
-
-      const saleProduct = await SaleProduct.findOne({productId: productId});
-      if (saleProduct) {
-        return res.status(200).json({
-          message: "Lấy chi tiết sản phẩm thành công",
-          data: product,
-          discount : saleProduct.discount,
-          limit : saleProduct.limit,
-          expireAt : saleProduct.expireAt,
-          totalPages: totalPages,
-          currentPage: page,
-        });
+      // Lấy sản phẩm theo ID
+      const product = await Product.findById(productId);
+      if (!product) {
+        return res.status(404).json({ message: "Không tìm thấy sản phẩm" });
       }
-      return res.status(200).json({
+
+      // **Tính tổng số review** (chỉ đếm, không lấy dữ liệu)
+      const totalReviews = await Review.countDocuments({ product: productId });
+
+      const starCountsResult = await Review.aggregate([
+        { $match: { product: new Types.ObjectId(productId) } },
+        { $group: { _id: "$rate", count: { $sum: 1 } } }
+      ]);
+      console.log(starCountsResult)
+// Chuyển kết quả về dạng object chuẩn
+      const starCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+      starCountsResult.forEach(({ _id, count }) => {
+        if (_id >= 1 && _id <= 5) {
+          starCounts[_id] = count;
+        }
+      });
+
+
+
+      // **Chỉ lấy 5 review gần nhất** (tối ưu bằng `limit` + `sort`)
+      const latestReviews = await Review.find({ product: productId })
+          .populate("userId", "name avatar")
+          .sort({ createdAt: -1 }) // Lấy review mới nhất trước
+          .limit(5);
+      // Lấy thông tin giảm giá (nếu có)
+      const saleProduct = await SaleProduct.findOne({ productId });
+
+      let responseData = {
         message: "Lấy chi tiết sản phẩm thành công",
         data: product,
-        totalPages: totalPages,
-        currentPage: page,
-      });
+        totalReviews,
+        starCounts,
+        reviews: latestReviews,
+      };
+
+      if (saleProduct) {
+        responseData.discount = saleProduct.discount;
+        responseData.limit = saleProduct.limit;
+        responseData.expireAt = saleProduct.expireAt;
+      }
+
+      return res.status(200).json(responseData);
     } catch (e) {
-      console.error("Lấy dữ liệu sản phẩm thất bại: " + e.message);
+      console.error("Lỗi lấy dữ liệu sản phẩm:", e.message);
       return res.status(500).json({ message: "Lỗi server", error: e.message });
     }
-
   },
-   addProduct : async (req, res) => {
+
+
+  addProduct : async (req, res) => {
     try {
       let { name, price, description, size, color ,cost, subCategory,stock,image } = req.body;
 

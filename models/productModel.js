@@ -28,12 +28,16 @@ const reviewSchema = mongoose.Schema({
     ref: "User",
     required: true,
   },
-
   rate: {
     type: Number,
-    min: 0,
+    min: 1,
     max: 5,
-    default: 0,
+    default: 1,
+    required: true,
+  },
+  product : {
+    type: mongoose.Schema.ObjectId,
+    ref: "Product",
     required: true,
   },
   reviewDate: {
@@ -92,10 +96,6 @@ const productSchema = new mongoose.Schema({
     type: descriptionSchema, // Sử dụng subdocument schema đã định nghĩa
     required: true,
   },
-  reviews: {
-    type: [mongoose.Schema.ObjectId],
-    ref: "Review",
-  },
   color: [
     {
       imageColor : {
@@ -121,7 +121,6 @@ const productSchema = new mongoose.Schema({
   rateCount : {
     type: Number,
     min: 0,
-    max: 5,
     default: 0,
   },
   subCategory: {
