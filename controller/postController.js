@@ -6,7 +6,7 @@ const postController = {
     // 1. Tạo bài viết
     createPost: async (req, res) => {
         try {
-            const { content ,product,hashtag} = req.body;
+            const { content,hashtag} = req.body;
             const files = req.files;
             const user = req.user.userId;
 
@@ -21,7 +21,6 @@ const postController = {
             const newPost = new Post({
                 user,
                 content,
-                product,
                 image: image,
                 hashtag : hashtag,
             });
@@ -38,9 +37,7 @@ const postController = {
         try {
             const userId = req.user.userId;
             const posts = await Post.find({})
-                .populate("user", "name avatar") // ✅ Lấy thông tin user
-                .populate("product", "sold rateCount"); // ✅ Lấy thông tin sản phẩm
-
+                .populate("user", "name avatar")
             // Duyệt qua từng bài post và thêm `isLike`
             const data = posts.map((post) => ({
                 ...post.toObject(), // Chuyển document Mongoose thành object thuần
@@ -138,7 +135,6 @@ const postController = {
 
             const post = await Post.findById(postId)
                 .populate("user", "name avatar") // ✅ Lấy thông tin user
-                .populate("product", "sold rateCount") // ✅ Lấy thông tin sản phẩm
                 .populate({
                     path: "comments",
                     options: {limit : 10},
@@ -153,7 +149,6 @@ const postController = {
                 return res.status(404).json({ message: "Bài viết không tồn tại" });
             }
 
-            console.log(post);
 
             // Xử lý dữ liệu trả về
             const formattedPost = {
@@ -165,8 +160,6 @@ const postController = {
                 likeCount: post.likes.length,
                 isLike: post.likes.includes(userId),
                 commentCount: post.comments.length,
-                rateCount: post.product?.rateCount || 0,
-                soldCount: post.product?.sold || 0,
             };
 
             const formattedComments = post.comments.map((comment) => ({
