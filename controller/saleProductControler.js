@@ -99,7 +99,7 @@ const saleProductController = {
             return res.status(200).json({
                 message: "Lấy danh sách sản phẩm giảm giá thành công",
                 data: saleProducts,
-                totalPages: Math.ceil(totalSaleProducts / limit),
+                totalSaleProducts: totalSaleProducts,
                 currentPage: page,
             });
         } catch (error) {

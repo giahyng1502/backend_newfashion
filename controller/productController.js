@@ -3,17 +3,20 @@ const {uploadImage} = require("../lib/cloudflare");
 const {SubCategory} = require("../models/categoryModel");
 const SaleProduct = require("../models/SaleProduct");
 const productController = {
-  getAll: async (req, res) => {
+  getProductNotInSale: async (req, res) => {
     try {
       let page = parseInt(req.query.page) || 1;
       let limit = parseInt(req.query.limit) || 10;
-      let skip = (page - 1) * limit; // Bỏ qua số lượng sản phẩm cần thiết
+      let skip = (page - 1) * limit;
 
-      // Tìm tổng số sản phẩm
-      const totalProducts = await Product.countDocuments();
+      // Lấy danh sách productId
+      const saleProductIds = await SaleProduct.distinct("productId");
 
-      // Lấy danh sách sản phẩm có phân trang
-      const products = await Product.find({})
+      // Tìm tổng số sản phẩm không thuộc SaleProduct
+      const totalProducts = await Product.countDocuments({ _id: { $nin: saleProductIds } });
+
+      // Lấy danh sách sản phẩm (có phân trang) nhưng không chứa sản phẩm đã sale
+      const products = await Product.find({ _id: { $nin: saleProductIds } })
           .skip(skip)
           .limit(limit);
 
@@ -22,7 +25,7 @@ const productController = {
         data: products,
         currentPage: page,
         totalPages: Math.ceil(totalProducts / limit),
-        totalProducts: totalProducts
+        totalProducts
       });
 
     } catch (e) {
@@ -30,6 +33,33 @@ const productController = {
       return res.status(500).json({ message: "Lỗi server", error: e.message });
     }
   },
+
+  getAllProduct: async (req, res) => {
+    try {
+      let page = parseInt(req.query.page) || 1;
+      let limit = parseInt(req.query.limit) || 10;
+      let skip = (page - 1) * limit;
+      const totalProducts = await Product.countDocuments();
+
+      // Lấy danh sách sản phẩm (có phân trang) nhưng không chứa sản phẩm đã sale
+      const products = await Product.find()
+          .skip(skip)
+          .limit(limit);
+
+      return res.status(200).json({
+        message: "Lấy sản phẩm thành công",
+        data: products,
+        currentPage: page,
+        totalPages: Math.ceil(totalProducts / limit),
+        totalProducts
+      });
+
+    } catch (e) {
+      console.error("Lấy dữ liệu sản phẩm thất bại: " + e.message);
+      return res.status(500).json({ message: "Lỗi server", error: e.message });
+    }
+  },
+
 
   getOne: async (req, res) => {
     try {

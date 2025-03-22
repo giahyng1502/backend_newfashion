@@ -7,7 +7,8 @@ const { userMiddle } = require("../middleware/AuthMiddle");
 var router = express.Router();
 
 /* GET home page. */
-router.get("/", productController.getAll);
+router.get("/", productController.getProductNotInSale);
+router.get("/getAllProducts", productController.getAllProduct);
 router.post("/addProduct",productController.addProduct);
 router.get("/getOne/:productId", productController.getOne);
 router.put(
