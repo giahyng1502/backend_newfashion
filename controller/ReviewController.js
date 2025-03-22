@@ -4,7 +4,7 @@ const reviewController = {
    addReview : async (req, res) => {
     try {
       const { productId } = req.params;
-      const { content, rate } = req.body;
+      const { content, rate,purchased } = req.body;
       const userId = req.user.userId;
       const files = req.files
       let images;
@@ -21,6 +21,7 @@ const reviewController = {
       const newReview = new Review({
         content,
         rate,
+        purchased,
         product : productId,
         images,
         userId

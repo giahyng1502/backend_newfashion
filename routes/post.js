@@ -7,7 +7,7 @@ var router = express.Router();
 /* GET post listing. */
 router.post('/create',verifyAdmin,upload.array('files',5),postController.createPost);
 router.delete('/delete/:postId',verifyAdmin,postController.deletePost);
-router.put('/update/:postId',verifyAdmin,upload.array('files',5),postController.updatePost);
+router.put('/update/:postId',verifyAdmin,postController.updatePost);
 
 router.get('/getAll',userMiddle,postController.getAllPosts);
 router.get('/search',postController.searchPostByHashtag);

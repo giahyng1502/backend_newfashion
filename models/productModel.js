@@ -19,6 +19,10 @@ const reviewSchema = mongoose.Schema({
     type: [String],
     default: [],
   },
+  purchased : {
+    type: String,
+    required: true,
+  },
   content: {
     type: String,
     required: true,

@@ -56,28 +56,27 @@ const postController = {
     updatePost: async (req, res) => {
         try {
             const { postId } = req.params;
-            const { content ,hashtag} = req.body;
-            const files = req.files;
+            const { content, hashtag, images } = req.body;
 
-            let image;
-            if (files && files.length) {
-                image = await uploadImage(files);
-            }
-            const post = await Post.findById(postId);
-            if (!post) {
+            // Cập nhật bài viết
+            const updatedPost = await Post.findByIdAndUpdate(
+                postId,
+                { content, hashtag, images }, // Trường cần cập nhật
+                { new: true } // Trả về bài viết sau khi cập nhật
+            );
+
+            // Kiểm tra nếu bài viết không tồn tại
+            if (!updatedPost) {
                 return res.status(404).json({ message: 'Bài viết không tồn tại' });
             }
-            post.content = content || post.content;
-            post.image = image || post.image;
-            post.hashtag = hashtag || post.hashtag;
-            await post.save();
 
-            return res.status(200).json({ message: 'Cập nhật bài viết thành công', data : post });
+            return res.status(200).json({ message: 'Cập nhật bài viết thành công', data: updatedPost });
         } catch (error) {
             console.error("Lỗi khi cập nhật bài viết:", error);
             return res.status(500).json({ message: 'Lỗi server', error: error.message });
         }
     },
+
 
     // 4. Xóa bài viết
     deletePost: async (req, res) => {
@@ -88,10 +87,6 @@ const postController = {
             if (!post) {
                 return res.status(404).json({ message: 'Bài viết không tồn tại' });
             }
-            //if (post.userId.toString() !== userId) {
-                //return res.status(403).json({ message: 'Bạn không có quyền xóa bài viết này' });
-            //}
-
             await post.deleteOne();
             return res.status(200).json({ message: 'Xóa bài viết thành công' });
         } catch (error) {

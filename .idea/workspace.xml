@@ -4,12 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Cập nhập thuộc tính isSelected vào cart, cho phép người dùng xóa, tạo order bằng những sản phẩm đã chọn">
+    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="xóa thuộc tính review ra khỏ product và sửa lại logic review , trả về số lượng từng rate khi người dùng tìm kiếm sản phẩm theo id">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/UserController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/UserController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/cartController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/cartController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/orderController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/orderController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/orderModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/orderModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/postController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/postController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/postModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/postModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/productModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/productModel.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,6 +109,7 @@
       <workItem from="1741426371622" duration="3670000" />
       <workItem from="1741854554712" duration="2059000" />
       <workItem from="1742044317358" duration="6363000" />
+      <workItem from="1742060622302" duration="47995000" />
     </task>
     <task id="LOCAL-00001" summary="Hoàn thiện chức năng thêm , cập nhập sản phẩm , và review sản phẩm">
       <option name="closed" value="true" />
@@ -279,15 +279,61 @@
       <option name="project" value="LOCAL" />
       <updated>1741505747716</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Hoàn thiện chức năng tìm kiếm sản phẩm , product, order ,user">
+      <option name="closed" value="true" />
+      <created>1742369176443</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1742369176443</updated>
+    </task>
+    <task id="LOCAL-00023" summary="cập nhập hashtag cho bài viết và hoàn thêm chức năng tìm kiếm bài viết theo hashtag">
+      <option name="closed" value="true" />
+      <created>1742555745394</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1742555745394</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Cập nhập chức năng cho phép người dùng để địa chỉ mặc định khi mua hàng">
+      <option name="closed" value="true" />
+      <created>1742557462788</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1742557462788</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Thêm chức năng chỉ lấy những sản phẩm không được giảm giá">
+      <option name="closed" value="true" />
+      <created>1742640777340</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1742640777340</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Xóa thuộc tính productId và sửa logic của thêm bài viết">
+      <option name="closed" value="true" />
+      <created>1742661552499</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1742661552499</updated>
+    </task>
+    <task id="LOCAL-00027" summary="xóa thuộc tính review ra khỏ product và sửa lại logic review , trả về số lượng từng rate khi người dùng tìm kiếm sản phẩm theo id">
+      <option name="closed" value="true" />
+      <created>1742661637359</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1742661637359</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Hoàn thiện chức năng thêm , cập nhập sản phẩm , và review sản phẩm" />
-    <MESSAGE value="Hoàn thiện chức năng thêm sửa xóa sản phẩm trong giỏ hàng" />
     <MESSAGE value="Hoàn thiện chức năng thêm sửa xóa voucher" />
     <MESSAGE value="Hoàn thiện chức năng thêm sửa hủy đơn hàng và tìm kiếm đơn hàng theo id người dùng , Xử lý giảm tiền voucher , point" />
     <MESSAGE value="hoàn thiện chức CRUD bài post , hoàn thành chức năng bình luận và like bài viết" />
@@ -307,6 +353,12 @@
     <MESSAGE value="Thay đổi model post và cập nhập chức năng like comment , reply comment và like comment bài viết" />
     <MESSAGE value="Thêm thuộc tính cost giá tiền nhập vào và sửa lại logic ở giỏ hàng và order" />
     <MESSAGE value="Cập nhập thuộc tính isSelected vào cart, cho phép người dùng xóa, tạo order bằng những sản phẩm đã chọn" />
-    <option name="LAST_COMMIT_MESSAGE" value="Cập nhập thuộc tính isSelected vào cart, cho phép người dùng xóa, tạo order bằng những sản phẩm đã chọn" />
+    <MESSAGE value="Hoàn thiện chức năng tìm kiếm sản phẩm , product, order ,user" />
+    <MESSAGE value="cập nhập hashtag cho bài viết và hoàn thêm chức năng tìm kiếm bài viết theo hashtag" />
+    <MESSAGE value="Cập nhập chức năng cho phép người dùng để địa chỉ mặc định khi mua hàng" />
+    <MESSAGE value="Thêm chức năng chỉ lấy những sản phẩm không được giảm giá" />
+    <MESSAGE value="Xóa thuộc tính productId và sửa logic của thêm bài viết" />
+    <MESSAGE value="xóa thuộc tính review ra khỏ product và sửa lại logic review , trả về số lượng từng rate khi người dùng tìm kiếm sản phẩm theo id" />
+    <option name="LAST_COMMIT_MESSAGE" value="xóa thuộc tính review ra khỏ product và sửa lại logic review , trả về số lượng từng rate khi người dùng tìm kiếm sản phẩm theo id" />
   </component>
 </project>
