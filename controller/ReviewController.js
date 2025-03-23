@@ -1,44 +1,69 @@
 const { uploadImage } = require("../lib/cloudflare");
 const { Review, Product } = require("../models/productModel");
+const Order = require("../models/orderModel");
 const reviewController = {
-   addReview : async (req, res) => {
+  addReview: async (req, res) => {
     try {
-      const { productId } = req.params;
-      const { content, rate,purchased } = req.body;
+      const { orderId } = req.params;
+      const { content, productId } = req.body;
+      const rate = parseInt(req.body.rate);
       const userId = req.user.userId;
-      const files = req.files
+      const files = req.files;
       let images;
-      if (files.length > 0) {
-        images = await uploadImage(files)
+      console.log(userId);
+      // 🔎 Kiểm tra đơn hàng hợp lệ và thuộc về người dùng
+      const order = await Order.findOne({ $and : [{_id: orderId} , {userId : userId}] });
+
+      if (!order) {
+        return res.status(404).json({ message: "Đơn hàng không tồn tại hoặc không thuộc về bạn" });
       }
-      // Kiểm tra sản phẩm tồn tại
+      // 🚛 Chỉ cho phép đánh giá nếu đơn hàng đã giao thành công
+      if (order.status !== 3) {
+        return res.status(400).json({ message: "Bạn chỉ có thể đánh giá khi đơn hàng đã giao thành công" });
+      }
+
+      // 🛍️ Kiểm tra sản phẩm có trong đơn hàng không
+      const itemInOrder = order.item.find((item) => item.productId.toString() === productId);
+      if (!itemInOrder) {
+        return res.status(400).json({ message: "Sản phẩm không nằm trong đơn hàng này" });
+      }
+
+      //  Kiểm tra xem người dùng đã đánh giá sản phẩm này chưa
+      const existingReview = await Review.findOne({ productId: productId, userId, orderId });
+      if (existingReview) {
+        return res.status(400).json({ message: "Bạn đã đánh giá sản phẩm này rồi!" });
+      }
+
+      // 🏷️Kiểm tra sản phẩm có tồn tại không
       const product = await Product.findById(productId);
       if (!product) {
         return res.status(404).json({ message: "Sản phẩm không tồn tại" });
       }
 
-      // Tạo review mới
+      //  Lấy thông tin màu sắc & kích thước đã mua
+      const purchased = `Màu: ${itemInOrder.color?.nameColor || "Không xác định"} / Kích thước: ${itemInOrder.size}`;
+      if (files.length > 0) {
+        images = await uploadImage(files);
+      }
+      // ✍️ Tạo review mới
       const newReview = new Review({
         content,
         rate,
         purchased,
-        product : productId,
+        productId,
+        orderId,
         images,
-        userId
+        userId,
       });
-
-      // Lưu review vào DB
+      //  Lưu review vào DB
       await newReview.save();
 
-      // Cập nhật danh sách review của sản phẩm
+      //  Tối ưu cập nhật rating trung bình
       product.rateCount += 1;
+      product.totalRating = (product.totalRating || 0) + rate;
+      product.rating = parseFloat((product.totalRating / product.rateCount).toFixed(1));
 
-      // Tính lại rating trung bình
-      const allReviews = await Review.find({ _id: { $in: product.reviews } });
-      const totalRating = allReviews.reduce((sum, r) => sum + r.rate, 0);
-      product.rating = totalRating / product.rateCount;
-
-      // Lưu cập nhật sản phẩm
+      // Lưu cập nhật vào DB
       await product.save();
 
       return res.status(201).json({ message: "Đánh giá thành công", review: newReview });
@@ -48,6 +73,8 @@ const reviewController = {
       return res.status(500).json({ message: "Lỗi server", error: error.message });
     }
   },
+
+
   getReviewByProductId: async (req, res) => {
     try {
       const { productId } = req.params;

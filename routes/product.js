@@ -13,7 +13,7 @@ router.post("/addProduct",productController.addProduct);
 router.get("/getOne/:productId", productController.getOne);
 
 router.put(
-  "/putReview/:productId",
+  "/putReview/:orderId",
   userMiddle,
   upload.array("files", 5),
   reviewController.addReview

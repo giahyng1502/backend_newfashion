@@ -4,11 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="xóa thuộc tính review ra khỏ product và sửa lại logic review , trả về số lượng từng rate khi người dùng tìm kiếm sản phẩm theo id">
+    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="sửa logic cập nhập bài viết và thêm thực thể purchased vào review">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/postController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/postController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/postModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/postModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/ReviewController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/ReviewController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/productModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/productModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/product.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/product.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,7 +109,7 @@
       <workItem from="1741426371622" duration="3670000" />
       <workItem from="1741854554712" duration="2059000" />
       <workItem from="1742044317358" duration="6363000" />
-      <workItem from="1742060622302" duration="47995000" />
+      <workItem from="1742060622302" duration="52811000" />
     </task>
     <task id="LOCAL-00001" summary="Hoàn thiện chức năng thêm , cập nhập sản phẩm , và review sản phẩm">
       <option name="closed" value="true" />
@@ -327,14 +327,21 @@
       <option name="project" value="LOCAL" />
       <updated>1742661637359</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="sửa logic cập nhập bài viết và thêm thực thể purchased vào review">
+      <option name="closed" value="true" />
+      <created>1742664037347</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1742664037347</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Hoàn thiện chức năng thêm sửa xóa voucher" />
     <MESSAGE value="Hoàn thiện chức năng thêm sửa hủy đơn hàng và tìm kiếm đơn hàng theo id người dùng , Xử lý giảm tiền voucher , point" />
     <MESSAGE value="hoàn thiện chức CRUD bài post , hoàn thành chức năng bình luận và like bài viết" />
     <MESSAGE value="Cập nhập lại model cho phép lưu trữ lịch sử giao dịch và lịch sử xác nhận đơn hàng" />
@@ -359,6 +366,7 @@
     <MESSAGE value="Thêm chức năng chỉ lấy những sản phẩm không được giảm giá" />
     <MESSAGE value="Xóa thuộc tính productId và sửa logic của thêm bài viết" />
     <MESSAGE value="xóa thuộc tính review ra khỏ product và sửa lại logic review , trả về số lượng từng rate khi người dùng tìm kiếm sản phẩm theo id" />
-    <option name="LAST_COMMIT_MESSAGE" value="xóa thuộc tính review ra khỏ product và sửa lại logic review , trả về số lượng từng rate khi người dùng tìm kiếm sản phẩm theo id" />
+    <MESSAGE value="sửa logic cập nhập bài viết và thêm thực thể purchased vào review" />
+    <option name="LAST_COMMIT_MESSAGE" value="sửa logic cập nhập bài viết và thêm thực thể purchased vào review" />
   </component>
 </project>

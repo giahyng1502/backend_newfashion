@@ -39,7 +39,12 @@ const reviewSchema = mongoose.Schema({
     default: 1,
     required: true,
   },
-  product : {
+  orderId : {
+    type: mongoose.Schema.ObjectId,
+    ref: "Order",
+    required: true,
+  },
+  productId : {
     type: mongoose.Schema.ObjectId,
     ref: "Product",
     required: true,
@@ -131,6 +136,11 @@ const productSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: "Subcategory",
   },
+  totalRating : {
+    type: Number,
+    required: true,
+    default: 0,
+  }
 });
 
 const Product = mongoose.model("Product", productSchema);

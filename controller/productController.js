@@ -73,10 +73,10 @@ const productController = {
       }
 
       // **Tính tổng số review** (chỉ đếm, không lấy dữ liệu)
-      const totalReviews = await Review.countDocuments({ product: productId });
+      const totalReviews = await Review.countDocuments({ productId: productId });
 
       const starCountsResult = await Review.aggregate([
-        { $match: { product: new Types.ObjectId(productId) } },
+        { $match: { productId: new Types.ObjectId(productId) } },
         { $group: { _id: "$rate", count: { $sum: 1 } } }
       ]);
       console.log(starCountsResult)
@@ -91,7 +91,7 @@ const productController = {
 
 
       // **Chỉ lấy 5 review gần nhất** (tối ưu bằng `limit` + `sort`)
-      const latestReviews = await Review.find({ product: productId })
+      const latestReviews = await Review.find({ productId: productId })
           .populate("userId", "name avatar")
           .sort({ createdAt: -1 }) // Lấy review mới nhất trước
           .limit(5);
