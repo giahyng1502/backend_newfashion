@@ -12,6 +12,10 @@ const replies = new mongoose.Schema({
             ref: 'User',
         }
     ],
+    commentId: {
+            type: mongoose.Schema.ObjectId,
+            ref: 'Comment', required: true,
+    },
     content: {
         type: String,
         required: true
@@ -31,16 +35,19 @@ const commentSchema = new mongoose.Schema({
             ref: 'User',
         }
     ],
+    replyCount: {
+        type: Number,
+        default : 0
+    },
     content: {
         type: String,
         required: true
     },
-    replies: [
-        {
+    postId: {
             type : mongoose.Schema.ObjectId,
-            ref: 'Reply',
-        }
-    ],
+            ref: 'Post',
+            required: true,
+    },
     createdAt: { type: Date, default: Date.now },
 })
 const postSchema = new mongoose.Schema({
@@ -68,12 +75,10 @@ const postSchema = new mongoose.Schema({
         }
     ],
 
-    comments: [
-        {
-            type: mongoose.Schema.ObjectId,
-            ref: 'Comment',
-        }
-    ]
+    commentCount: {
+            type: Number,
+            default : 0
+    }
 }, { timestamps: true });
 
 const Post = mongoose.model('Post', postSchema);

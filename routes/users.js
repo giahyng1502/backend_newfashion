@@ -25,6 +25,8 @@ router.put('/adminUpdateUser/:id',verifyAdmin,UserController.adminUpdateUser);
 
 router.post('/login',UserController.login);
 
+router.post('/loginWithGoogle',UserController.loginWithGoogle);
+
 router.put('/update',userMiddle,upload.array('files',1),UserController.updateUser);
 
 module.exports = router;

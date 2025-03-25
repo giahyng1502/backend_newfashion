@@ -17,6 +17,7 @@
     "dotenv": "^16.4.7",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
+    "firebase-admin": "^13.2.0",
     "http": "^0.0.1-security",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^9.0.2",

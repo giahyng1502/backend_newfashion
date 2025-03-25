@@ -6,14 +6,14 @@ const postController = {
     // 1. Tạo bài viết
     createPost: async (req, res) => {
         try {
-            const { content,hashtag} = req.body;
-            const files = req.files;
+            const { content,hashtag,images} = req.body;
+            // const files = req.files;
             const user = req.user.userId;
 
-            let image = [];
-            if (files && files.length) {
-                image = await uploadImage(files);
-            }
+            // let image = [];
+            // if (files && files.length) {
+            //     image = await uploadImage(files);
+            // }
             if (!content) {
                 return res.status(400).json({ message: 'Nội dung bài viết không được để trống' });
             }
@@ -21,7 +21,7 @@ const postController = {
             const newPost = new Post({
                 user,
                 content,
-                image: image,
+                images: images,
                 hashtag : hashtag,
             });
             await newPost.save();
@@ -40,7 +40,8 @@ const postController = {
                 .populate("user", "name avatar")
             // Duyệt qua từng bài post và thêm `isLike`
             const data = posts.map((post) => ({
-                ...post.toObject(), // Chuyển document Mongoose thành object thuần
+                ...post.toObject(),
+                likes : post.likes.length,
                 isLike: post.likes.includes(userId), // So sánh với `userId`
             }));
 
@@ -114,7 +115,11 @@ const postController = {
             }
 
             await post.save();
-            return res.status(200).json({ message: isLiked ? 'Bỏ like bài viết' : 'Đã like bài viết', data : post });
+            const data = {
+                likes : post.likes.length,
+                isLike : !isLiked
+            }
+            return res.status(200).json({ message: isLiked ? 'Bỏ like bài viết' : 'Đã like bài viết', data});
         } catch (error) {
             console.error("Lỗi khi like/unlike bài viết:", error);
             return res.status(500).json({ message: 'Lỗi server', error: error.message });
@@ -129,46 +134,11 @@ const postController = {
             const userId = req.user.id;
 
             const post = await Post.findById(postId)
-                .populate("user", "name avatar") // ✅ Lấy thông tin user
-                .populate({
-                    path: "comments",
-                    options: {limit : 10},
-                    populate: {
-                        path: "user",
-                        select: "name avatar",
-                        match: { _id: { $ne: null } }, // ✅ Chỉ lấy comment có userId hợp lệ
-                    },
-                })
 
             if (!post) {
                 return res.status(404).json({ message: "Bài viết không tồn tại" });
             }
-
-
-            // Xử lý dữ liệu trả về
-            const formattedPost = {
-                shopName: post.user ? post.user.name : "Unknown Shop", // ✅ Kiểm tra null
-                shopAvatar: post.user ? post.user.avatar : "",
-                time: post.createdAt,
-                imageUrl: post.image,
-                content: post.content,
-                likeCount: post.likes.length,
-                isLike: post.likes.includes(userId),
-                commentCount: post.comments.length,
-            };
-
-            const formattedComments = post.comments.map((comment) => ({
-                likeCount: comment.likes.length,
-                commentCount: comment.replies.length,
-                isLike: comment.likes.includes(userId),
-                name: comment.user ? comment.user.name : "Unknown User",
-                content: comment.content,
-                time: comment.createdAt,
-                avatar: comment.user ? comment.user.avatar : null,
-                replyCount : comment.replies.length,
-            }));
-
-            return res.status(200).json({ post: formattedPost, comments: formattedComments });
+            return res.status(200).json({ post: post,});
         } catch (error) {
             console.error("Lỗi lấy bài viết:", error);
             return res.status(500).json({ message: "Lỗi server", error: error.message });

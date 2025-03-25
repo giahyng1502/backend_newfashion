@@ -54,7 +54,6 @@ const InformationController = {
                 { $set: { isDefault: true } },
                 { new: true }
             );
-
             if (!updatedInfo) {
                 return res.status(404).json({ message: "Không tìm thấy thông tin cần cập nhật" });
             }
@@ -101,7 +100,7 @@ const InformationController = {
                 return res.status(400).json({ message: "ID không hợp lệ" });
             }
 
-            const info = await Information.findOneAndDelete({ userId, _id: informationId });
+            const info = await Information.findOneAndDelete({ user : userId, _id: informationId });
 
             if (!info) {
                 return res.status(404).json({ message: "Không tìm thấy thông tin để xóa" });

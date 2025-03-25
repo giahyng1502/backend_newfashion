@@ -40,12 +40,27 @@ const userVoucherSchema = new mongoose.Schema({
     },
 });
 
+const deviceSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
+    deviceToken: [
+        {
+            type : String,
+        }
+    ]
+});
 
 
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
+    },
+    uId : {
+        type: String,
     },
     email: {
         type: String,
@@ -85,6 +100,7 @@ const userSchema = new mongoose.Schema({
     ]
 }, { timestamps: true });
 const Information = mongoose.model('Information', informationSchema);
+const Device = mongoose.model('Device', deviceSchema);
 const User = mongoose.model('User', userSchema);
 const UserVoucher = mongoose.model("UserVoucher", userVoucherSchema);
-module.exports = { User, Information ,UserVoucher};
+module.exports = { User, Information ,UserVoucher,Device};
