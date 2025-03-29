@@ -5,10 +5,9 @@ var router = express.Router();
 
 /* GET users listing. */
 router.post('/create',userMiddle,orderController.create);
-router.get('/getAll',orderController.getAll);
-router.get('/getOrderUser',userMiddle,orderController.getOrderById);
+router.get('/search',verifyAdmin,orderController.searchOrder);
+router.get('/getOrderUser',userMiddle,orderController.getOrderByUser);
 router.put('/cancel/:orderId',userMiddle,orderController.cancelOrder);
 router.put('/update/:orderId',verifyAdmin,orderController.updateStatus);
-router.get('/search',verifyAdmin,orderController.searchOrderByUser);
 
 module.exports = router;

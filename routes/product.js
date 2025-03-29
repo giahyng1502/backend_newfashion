@@ -25,6 +25,8 @@ router.put("/deleteReview",userMiddle, ReviewController.deleteReview);
 
 router.get("/search", productController.searchProduct);
 
+router.get("/subcategory/searchProduct/:subCategory", productController.getProductBySubCategory);
+
 router.get("/getReviews/:productId", reviewController.getReviewByProductId);
 
 module.exports = router;

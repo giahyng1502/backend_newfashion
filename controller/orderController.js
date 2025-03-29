@@ -4,6 +4,7 @@ const Voucher = require("../models/voucherModel");
 const Order = require("../models/orderModel");
 const SaleProduct = require("../models/SaleProduct");
 const {Product} = require("../models/productModel");
+const generateOrderCode = require("../lib/generateCode");
 const allowedStatus = [0, 1, 2, 3, 4, 5];
 const orderController = {
         create: async (req, res) => {
@@ -99,8 +100,10 @@ const orderController = {
                 }));
 
                 // Tạo đơn hàng
+                const orderCode = `OD${generateOrderCode(userId)}`
                 const order = new Order({
                     userId: userId,
+                    orderCode,
                     item: items,
                     totalPrice: totalPrice,
                     statusHistory: {
@@ -129,35 +132,10 @@ const orderController = {
                 });
             }
         },
-    getAll: async (req, res) => {
-        try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 10;
-
-            const skip = (page - 1) * limit;
-
-            const totalOrder = await Order.countDocuments();
-            const orders = await Order.find().skip(skip).limit(limit).populate('statusHistory.updatedBy',"name avatar role");
-
-            return res.status(200).json({
-                message: "Lấy thông tin đơn hàng thành công",
-                data: orders,
-                currentPage: page,
-                totalOrder: Math.ceil(totalOrder / limit),
-                totalProducts: totalOrder
-            });
-        } catch (e) {
-            console.error("Lấy đơn hàng thất bại: " + e.message);
-            return res.status(500).json({
-                message: 'Lỗi server',
-                error: e.message
-            });
-        }
-    },
-    getOrderById: async (req, res) => {
+    getOrderByUser: async (req, res) => {
         try{
             const userId = req.user.userId;
-            const order = await Order.findOne({ userId: userId })
+            const order = await Order.find({ userId: userId })
                 .populate("statusHistory.updatedBy",'name')
                 .sort({"statusHistory.timestamp" : -1});
             if (!order) {
@@ -266,38 +244,57 @@ const orderController = {
             return res.status(500).json({message : 'Lỗi sever',error: e.message});
         }
     },
-    searchOrderByUser: async (req, res) => {
+    searchOrder: async (req, res) => {
         try {
-            const { email, userId } = req.query; // Lấy email hoặc userId từ query
+            let { page = 1, limit = 10, sortField = "dateCreated", sortOrder = "desc", search } = req.query;
 
-            if (!email && !userId) {
-                return res.status(400).json({ message: "Vui lòng nhập email hoặc userId để tìm kiếm" });
+            // Đảm bảo `page` và `limit` luôn là số nguyên dương
+            page = Math.max(1, parseInt(page)) || 1;
+            limit = Math.max(1, parseInt(limit)) || 10;
+
+            // Tạo bộ lọc tìm kiếm chung
+            const filter = {};
+            if (search && search.trim() !== "") {
+                filter.$or = [
+                    { "shippingAddress.phoneNumber": { $regex: search, $options: "i" } },  // Số điện thoại
+                    { orderCode: { $regex: search, $options: "i" } },    // Mã đơn hàng
+                    { "shippingAddress.name": { $regex: search, $options: "i" } }  // Tên khách hàng
+                ];
+            }
+            // Tạo bộ sắp xếp
+            const sortOption = {};
+            if (sortField === "status") {
+                sortOption["status"] = sortOrder === "desc" ? -1 : 1;
+                sortOption["dateCreated"] = -1;
+            } else {
+                sortOption[sortField] = sortOrder === "desc" ? -1 : 1;
             }
 
-            let user;
-            if (email) {
-                user = await User.findOne({ email }); // Tìm user theo email
-                if (!user) {
-                    return res.status(404).json({ message: "Không tìm thấy người dùng với email này" });
-                }
-            }
+            // Đếm tổng số đơn hàng phù hợp trước khi phân trang
+            const totalOrders = await Order.countDocuments(filter);
 
-            const orders = await Order.find({
-                userId: userId || user._id // Nếu có userId thì tìm theo userId, nếu không thì lấy _id của user từ email
+            // Nếu page vượt quá số lượng đơn hàng có sẵn, điều chỉnh về trang cuối cùng
+            const totalPages = Math.ceil(totalOrders / limit);
+            if (page > totalPages) page = totalPages || 1;
+
+            // Lấy danh sách đơn hàng với phân trang và tìm kiếm chung
+            const orders = await Order.find(filter)
+                .sort(sortOption)
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .populate("statusHistory.updatedBy", "name avatar role");
+
+            res.status(200).json({
+                data: orders,
+                total: totalOrders,
+                totalPages,
+                currentPage: page,
+                limit,
             });
-
-            if (orders.length === 0) {
-                return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
-            }
-
-            return res.status(200).json({ orders });
-        } catch (err) {
-            console.error("Lỗi server:", err.message);
-            return res.status(500).json({ message: "Lỗi server" });
+        } catch (error) {
+            res.status(500).json({ message: "Lỗi server", error: error.message });
         }
     }
-
-
 };
 
 module.exports = orderController;

@@ -6,6 +6,11 @@ const orderSchema = mongoose.Schema({
         ref: 'User',
         required: true,
     },
+    orderCode: {
+        type: String,
+        required: true,
+        unique: true,
+    },
     dateCreated: {
         type: Date,
         default: Date.now, // Thời gian tạo đơn hàng

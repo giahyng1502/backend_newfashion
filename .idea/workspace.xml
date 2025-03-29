@@ -4,20 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Hoàn thiện chức năng review : Chỉ khi nào đơn hàng được giao thành công thì người dùng mới được review và chỉ được review 1 lần duy nhất 1 sản phẩm trên 1 đơn hàng">
-      <change afterPath="$PROJECT_DIR$/firebase/config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/firebase/pushNotification.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/firebase/serviceAccountKey.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/generateJwtToken.js" afterDir="false" />
+    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Sửa logic bài post">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/UserController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/UserController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/informationController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/informationController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/postController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/postController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/userModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/userModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/commentController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/commentController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/orderController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/orderController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/productController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/productController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/replyController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/replyController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/SaleProduct.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/SaleProduct.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/product.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/product.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,6 +120,10 @@
       <workItem from="1742746858051" duration="907000" />
       <workItem from="1742784765628" duration="8363000" />
       <workItem from="1742837847736" duration="3075000" />
+      <workItem from="1742892564042" duration="13465000" />
+      <workItem from="1742918328479" duration="5829000" />
+      <workItem from="1743003768036" duration="481000" />
+      <workItem from="1743006182311" duration="8321000" />
     </task>
     <task id="LOCAL-00001" summary="Hoàn thiện chức năng thêm , cập nhập sản phẩm , và review sản phẩm">
       <option name="closed" value="true" />
@@ -359,14 +357,21 @@
       <option name="project" value="LOCAL" />
       <updated>1742704910920</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Sửa logic bài post">
+      <option name="closed" value="true" />
+      <created>1742905681249</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1742905681249</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="hoàn thiện chức CRUD bài post , hoàn thành chức năng bình luận và like bài viết" />
     <MESSAGE value="Cập nhập lại model cho phép lưu trữ lịch sử giao dịch và lịch sử xác nhận đơn hàng" />
     <MESSAGE value="hoàn thiện chức năng thêm sản phẩm giảm giá , cải thiện chức năng order khi người dùng mua hàng đang trong thời gian giảm giá" />
     <MESSAGE value="hoàn thiện chức năng CRUD category" />
@@ -391,6 +396,7 @@
     <MESSAGE value="xóa thuộc tính review ra khỏ product và sửa lại logic review , trả về số lượng từng rate khi người dùng tìm kiếm sản phẩm theo id" />
     <MESSAGE value="sửa logic cập nhập bài viết và thêm thực thể purchased vào review" />
     <MESSAGE value="Hoàn thiện chức năng review : Chỉ khi nào đơn hàng được giao thành công thì người dùng mới được review và chỉ được review 1 lần duy nhất 1 sản phẩm trên 1 đơn hàng" />
-    <option name="LAST_COMMIT_MESSAGE" value="Hoàn thiện chức năng review : Chỉ khi nào đơn hàng được giao thành công thì người dùng mới được review và chỉ được review 1 lần duy nhất 1 sản phẩm trên 1 đơn hàng" />
+    <MESSAGE value="Sửa logic bài post" />
+    <option name="LAST_COMMIT_MESSAGE" value="Sửa logic bài post" />
   </component>
 </project>

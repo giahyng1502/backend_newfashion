@@ -239,11 +239,28 @@ const productController = {
       console.error(e);
       return res.status(500).json({ message: "Lỗi hệ thống: " + e.toString() });
     }
+  },
+  getProductBySubCategory : async (req, res) => {
+    try {
+        const limit = parseInt(req.query.limit) || 10;
+        const page = parseInt(req.query.page) || 1;
+        const skip = (page - 1) * limit;
+        const subcateId = req.params.subCategory || null;
+        if (!subcateId) {
+          return res.status(404).json({message : 'Vui lòng chọn subcategory cần tìm'})
+        }
+        const totalProductInCategory = await Product.countDocuments({subCategory: subcateId});
+        const product = await Product.find({subCategory: subcateId}).skip(skip).limit(limit);
+        return res.status(200).json({message: 'Lấy danh sách sản phẩm trong subcategory thành công',data : product,
+          totalProductInCategory: totalProductInCategory,
+          currentPage : page,
+          totalPage : Math.ceil(totalProductInCategory/limit),
+        });
+    }catch (e) {
+      console.log(e)
+      return res.status(500).json({message: 'Lỗi hệ thống',error: e});
+    }
   }
-
-
-
-
 };
 
 module.exports = productController;

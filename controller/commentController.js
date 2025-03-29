@@ -19,10 +19,8 @@ const commentController = {
                 .populate({ path: "user", select: "name avatar" })
                 .skip(skip)
                 .limit(limit)
-                .lean(); // 🚀 Tối ưu hiệu suất
-
             const dataReturn = comments.map((comment) => ({
-                ...comment,
+                ...comment.toObject(),
                 likes: comment.likes.length,
                 isLike: comment.likes.includes(userId),
             }));
@@ -30,7 +28,10 @@ const commentController = {
             return res.status(200).json({
                 message: "Lấy danh sách bình luận thành công",
                 data: dataReturn,
-                totalComments
+                totalComments,
+                totalPages: Math.ceil(totalComments / limit),
+                currentPage: page,
+
             });
         } catch (e) {
             console.error("Lỗi khi lấy danh sách bình luận:", e);
@@ -49,7 +50,7 @@ const commentController = {
             await newComment.save();
 
             // Cập nhật `commentCount`
-            await Post.findByIdAndUpdate(postId, { $inc: { commentCount: 1 } });
+            await Post.findByIdAndUpdate(postId, { $inc: { commentCount: 1 } })
 
             return res.status(201).json({ success: true, comment: newComment });
         } catch (error) {

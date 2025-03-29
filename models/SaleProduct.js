@@ -25,7 +25,7 @@ const saleProductSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+  }
 });
 
 // Tạo TTL Index trên `expireAt`

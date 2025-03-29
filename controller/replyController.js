@@ -14,12 +14,15 @@ const replyController = {
                 .skip(skip)
                 .limit(limit)
                 .lean();
-
+            const totalComments = await Reply.countDocuments({commentId: commentId});
             const dataReturn = replies.map((reply) => {
                 return {
                     ...reply,
                     likes: reply.likes.length,
                     isLike: reply.likes.includes(userId),
+                    totalPages: Math.ceil(totalComments / limit),
+                    totalReplies : totalComments,
+                    currentPage: page,
                 };
             });
 
