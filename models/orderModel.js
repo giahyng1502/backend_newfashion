@@ -75,7 +75,7 @@ const orderSchema = mongoose.Schema({
             required: true,
         }
     },
-    item: [
+    items: [
         {
             productId : {
               type: mongoose.Schema.ObjectId,
@@ -114,9 +114,10 @@ const orderSchema = mongoose.Schema({
                 type: Number,
                 required: true,
             },
-            hasReview : {
-                type: Boolean,
-                default: false,
+            reviewId : {
+                type: mongoose.Schema.ObjectId,
+                ref: 'Review',
+                default: null,
             },
         }
     ],

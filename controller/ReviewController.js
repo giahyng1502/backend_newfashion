@@ -23,7 +23,7 @@ const reviewController = {
       }
 
       // 🛍️ Kiểm tra sản phẩm có trong đơn hàng không
-      const itemInOrder = order.item.find((item) => item.productId.toString() === productId);
+      const itemInOrder = order.items.find((item) => item.productId.toString() === productId);
       if (!itemInOrder) {
         return res.status(400).json({ message: "Sản phẩm không nằm trong đơn hàng này" });
       }
@@ -65,7 +65,13 @@ const reviewController = {
 
       // Lưu cập nhật vào DB
       await product.save();
-
+      console.log(newReview)
+      const newOrder = await Order.findOneAndUpdate(
+          { _id: orderId, "items.productId": productId },
+          { $set: { "items.$.reviewId": newReview._id } },
+          { new: true }
+      );
+      console.log(order)
       return res.status(201).json({ message: "Đánh giá thành công", review: newReview });
 
     } catch (error) {
