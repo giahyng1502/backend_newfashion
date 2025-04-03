@@ -33,10 +33,10 @@ const cartSchema = mongoose.Schema({
             price : {
                 type : Number,
             },
-            // discount : {
-            //     type : Number,
-            //     min : 0
-            // }
+            addedAt: {
+                type: Date,
+                default: Date.now, // Lưu thời gian thêm sản phẩm vào giỏ hàng
+            },
         }
     ],
     total : {

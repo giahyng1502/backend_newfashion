@@ -9,17 +9,20 @@ const cartController = {
             const userId = req.user.userId;
             console.log(userId);
             if (!userId) {
-                return res.status(401).json({message : 'Người dùng không tồn tại'})
+                return res.status(401).json({ message: 'Người dùng không tồn tại' });
             }
-            let cart = await Cart.findOne({ userId: userId }).populate("products.productId");
+
+            // Lấy giỏ hàng của người dùng và populate dữ liệu sản phẩm
+            let cart = await Cart.findOne({ userId: userId })
+                .populate("products.productId")
+                .sort({ "products.addedAt": -1 }); // Sắp xếp giảm dần theo thời gian thêm sản phẩm
 
             if (!cart) {
-                cart = new Cart({ userId, products: [], totalPrice: 0 });
+                cart = new Cart({ userId, products: [], total: 0 });
                 await cart.save();
             }
 
-
-            return res.json({message : 'Lấy dữ liệu trong giỏ hàng thành công ', data : cart});
+            return res.json({ message: 'Lấy dữ liệu trong giỏ hàng thành công', data: cart });
         } catch (e) {
             console.error("Lấy giỏ hàng thất bại: " + e.message);
             return res.status(500).json({ message: "Lỗi server", error: e.message });
