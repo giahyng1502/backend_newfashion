@@ -4,71 +4,55 @@ const {uploadImage} = require("../lib/cloudflare");
 const generateJwtToken = require("../lib/generateJwtToken");
 const admin = require("../firebase/config");
 const UserController = {
-    getUsers: async (req, res) => {
-        try {
-            let page = parseInt(req.query.page) || 1;
-            let limit = parseInt(req.query.limit) || 10;
-            let skip = (page - 1) * limit;
-
-            // Lấy danh sách user theo phân trang
-            const users = await User.find({})
-                .populate("information")
-                .skip(skip).select('-password')
-                .limit(limit);
-
-            // Tính tổng số user để biết tổng số trang
-            const totalUsers = await User.countDocuments({});
-            return res.status(200).json({
-                message: "Lấy thông tin người dùng thành công",
-                data: users,
-                totalUsers: totalUsers,
-                currentPage: page,
-            });
-
-        } catch (err) {
-            console.log("Lấy dữ liệu người dùng thất bại: " + err.message);
-            return res.status(500).json({
-                message: "Lấy thông tin người dùng thất bại",
-                error: err.message,
-            });
-        }
-    },
     searchUsers: async (req, res) => {
         try {
-            const {name, email, id} = req.query; // Lấy tham số tìm kiếm từ query
+            let { page = 1, limit = 10, sortField = "createdAt", sortOrder = "desc", search } = req.query;
 
-            if (!name && !email && !id) {
-                return res.status(400).json({message: "Vui lòng nhập từ khóa tìm kiếm"});
+            // Đảm bảo `page` và `limit` là số nguyên dương
+            page = Math.max(1, parseInt(page)) || 1;
+            limit = Math.max(1, parseInt(limit)) || 10;
+
+            // Tạo bộ lọc tìm kiếm
+            const filter = {};
+            if (search && search.trim() !== "") {
+                filter.$or = [
+                    { email: { $regex: search, $options: "i" } }, // Tìm theo email
+                    { name: { $regex: search, $options: "i" } },  // Tìm theo tên
+                ];
             }
 
-            let query = {};
-
-            // Nếu có ID và ID hợp lệ, tìm theo ID trước
-            if (id && id.match(/^[0-9a-fA-F]{24}$/)) {
-                query._id = id;
+            // Tạo bộ sắp xếp (ưu tiên `createdAt`)
+            const sortOption = {};
+            if (sortField === "role") {
+                sortOption["role"] = sortOrder === "desc" ? -1 : 1;
+                sortOption["createdAt"] = -1; // Sắp xếp phụ theo ngày tạo
+            } else {
+                sortOption[sortField] = sortOrder === "desc" ? -1 : 1;
             }
 
-            // Nếu có name, tìm theo name (không phân biệt hoa thường)
-            if (name) {
-                query.name = {$regex: name, $options: "i"};
-            }
+            // Đếm tổng số user phù hợp trước khi phân trang
+            const totalUsers = await User.countDocuments(filter);
 
-            // Nếu có email, tìm theo email (chính xác)
-            if (email) {
-                query.email = email;
-            }
+            // Nếu page vượt quá số lượng user có sẵn, điều chỉnh về trang cuối cùng
+            const totalPages = Math.ceil(totalUsers / limit);
+            if (page > totalPages) page = totalPages || 1;
 
-            // Tìm kiếm người dùng với điều kiện trên
-            const users = await User.find(query);
+            const users = await User.find(filter)
+                .select("-password")
+                .sort(sortOption)
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .lean();
 
-            if (users.length === 0) {
-                return res.status(404).json({message: "Không tìm thấy người dùng"});
-            }
-
-            return res.status(200).json({users});
-        } catch (err) {
-            console.error("Lỗi server:", err.message);
-            return res.status(500).json({message: "Lỗi server"});
+            res.status(200).json({
+                data: users,
+                total: totalUsers,
+                totalPages,
+                currentPage: page,
+                limit,
+            });
+        } catch (error) {
+            res.status(500).json({ message: "Lỗi server", error: error.message });
         }
     },
     register: async (req, res) => {
@@ -221,19 +205,21 @@ const UserController = {
     },
     login: async (req, res) => {
         try {
-            const {email, password} = req.body;
-            let user = await User.findOne({email: email});
+            const {email} = req.body;
+            const pass = req.body.password;
+            let user = await User.findOne({email: email}).lean();
             if (!user) {
                 return res.status(404).json({message: 'Tài khoản này không tồn tại trên sever'})
             }
             // kiểm tra mật khẩu
-            const isPasswordMatch = await bcrypt.compare(password, user.password);
+            const isPasswordMatch = await bcrypt.compare(pass, user.password);
             if (!isPasswordMatch) {
                 return res.status(401).json({message: 'Thông tin tài khoản hoặc mật khẩu không chính xác'});
             }
             // tạo JWT
             const token = generateJwtToken(user)
-            return res.status(200).json({message: 'Đăng nhập thành công', token: token});
+            const {password,...rest} = user;
+            return res.status(200).json({message: 'Đăng nhập thành công', token: token,user: rest});
         } catch (e) {
             console.log("Đăng nhập xẩy ra lỗi " + e.message);
             return res.status(500).json({message: 'Lỗi sever ', error: e.message});
@@ -248,6 +234,7 @@ const UserController = {
             if (!uid) {
                 return res.status(400).json({ message: "Bạn cần phải gửi uid" });
             }
+
             let user = await User.findOne({ uId: uid });
 
             if (!user) {
@@ -258,14 +245,20 @@ const UserController = {
                     name,
                     avatar: picture
                 });
-                await user.save(); // Lưu user mới vào database
+                await user.save();
                 console.log('Tạo tài khoản mới:', user);
             }
+
             const token = generateJwtToken(user);
+
+            // Chuyển đổi user sang object và xóa trường password
+            const userResponse = user.toObject();
+            delete userResponse.password;
 
             return res.status(200).json({
                 message: "Đăng nhập thành công",
                 token,
+                user: userResponse,
             });
 
         } catch (err) {
@@ -273,5 +266,6 @@ const UserController = {
             return res.status(500).json({ message: err.message });
         }
     },
+
 }
 module.exports = UserController;

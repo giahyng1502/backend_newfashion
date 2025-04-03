@@ -23,7 +23,7 @@ router.put("/updateProduct/:productId",productController.updateProduct);
 
 router.put("/deleteReview",userMiddle, ReviewController.deleteReview);
 
-router.get("/search", productController.searchProduct);
+router.get("/search", productController.searchProducts);
 
 router.get("/subcategory/searchProduct/:subCategory", productController.getProductBySubCategory);
 

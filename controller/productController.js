@@ -45,6 +45,9 @@ const productController = {
       // Lấy danh sách sản phẩm (có phân trang) nhưng không chứa sản phẩm đã sale
       const products = await Product.find()
           .skip(skip)
+          .sort({
+            createdAt: -1
+          })
           .limit(limit);
 
       return res.status(200).json({
@@ -214,32 +217,71 @@ const productController = {
       return res.status(500).json({ message: "Lỗi server", error: e.message });
     }
   },
-  searchProduct: async (req, res) => {
+  searchProducts: async (req, res) => {
     try {
-      const key = req.query.key; // Lấy từ query parameter
-      if (!key) {
-        return res.status(400).json({ message: "Vui lòng nhập từ khóa tìm kiếm" });
+      let {
+        page = 1,
+        limit = 10,
+        sortField = "createdAt",
+        sortOrder = "desc",
+        search,
+        minPrice,
+        maxPrice
+      } = req.query;
+
+      // Đảm bảo `page` và `limit` là số nguyên dương
+      page = Math.max(1, parseInt(page)) || 1;
+      limit = Math.max(1, parseInt(limit)) || 10;
+
+      // Tạo bộ lọc tìm kiếm
+      const filter = {};
+
+      if (search && search.trim() !== "") {
+        if (search.match(/^[0-9a-fA-F]{24}$/)) {
+          // Nếu search là ObjectId, tìm theo ID
+          filter._id = search;
+        } else {
+          // Tìm theo tên sản phẩm
+          filter.name = { $regex: search, $options: "i" };
+        }
       }
 
-      // Tìm theo ID nếu key là ObjectId
-      let product = await Product.findById(key).catch(() => null);
-      if (product) {
-        return res.status(200).json({ message: "Lấy thông tin sản phẩm thành công", data: product });
+      // Lọc theo khoảng giá
+      if (minPrice || maxPrice) {
+        filter.price = {};
+        if (minPrice) filter.price.$gte = parseFloat(minPrice);
+        if (maxPrice) filter.price.$lte = parseFloat(maxPrice);
       }
 
-      // Tìm kiếm theo tên (case-insensitive)
-      const products = await Product.find({ name: { $regex: key, $options: "i" } });
+      // Tạo bộ sắp xếp
+      const sortOption = {};
+      sortOption[sortField] = sortOrder === "desc" ? -1 : 1;
 
-      if (products.length === 0) {
-        return res.status(404).json({ message: "Không tìm thấy sản phẩm" });
-      }
+      // Đếm tổng số sản phẩm phù hợp trước khi phân trang
+      const totalProducts = await Product.countDocuments(filter);
 
-      return res.status(200).json({ message: "Lấy danh sách sản phẩm thành công", data: products });
-    } catch (e) {
-      console.error(e);
-      return res.status(500).json({ message: "Lỗi hệ thống: " + e.toString() });
+      // Nếu page vượt quá số lượng sản phẩm có sẵn, điều chỉnh về trang cuối cùng
+      const totalPages = Math.ceil(totalProducts / limit);
+      if (page > totalPages) page = totalPages || 1;
+
+      // Lấy danh sách sản phẩm theo điều kiện lọc, sắp xếp và phân trang
+      const products = await Product.find(filter)
+          .sort(sortOption)
+          .skip((page - 1) * limit)
+          .limit(limit)
+          .lean();
+
+      res.status(200).json({
+        data: products,
+        total: totalProducts,
+        totalPages,
+        currentPage: page,
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Lỗi server", error: error.message });
     }
   },
+
   getProductBySubCategory : async (req, res) => {
     try {
         const limit = parseInt(req.query.limit) || 10;

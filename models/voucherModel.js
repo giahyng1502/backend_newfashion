@@ -24,13 +24,17 @@ const voucherSchema = mongoose.Schema({
         required: true,
         default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // Cộng chính xác 7 ngày (tính theo giây)
     },
-
-
     discount: {
         type: Number,
         required: true,
-        default: 10,
+        default: 10,// Giảm giá theo phần trăm
+    },
+    maxDiscountPrice: {
+        type: Number, // Tối đa số tiền giảm giá có thể áp dụng
+        required: true,
+        default: 10000,
     }
+
 })
 const Voucher = mongoose.model("Voucher",voucherSchema);
 module.exports = Voucher;

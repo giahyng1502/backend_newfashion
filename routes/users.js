@@ -7,7 +7,6 @@ const {saveVoucherToWallet, getUserVouchers} = require("../controller/userVouche
 var router = express.Router();
 
 /* GET users listing. */
-router.get('/getAll',verifyAdmin,UserController.getUsers)
 
 router.get('/getMe',userMiddle,UserController.getMe)
 

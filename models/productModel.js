@@ -140,8 +140,9 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true,
     default: 0,
-  }
-});
+  },
+}, {timestamps: true}
+);
 
 const Product = mongoose.model("Product", productSchema);
 const Review = mongoose.model("Review", reviewSchema);
