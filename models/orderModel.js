@@ -33,13 +33,27 @@ const orderSchema = mongoose.Schema({
         default: 0,
     },
     voucherId: {
-        type: String,
+        type: mongoose.Schema.ObjectId,
+        ref: 'Voucher',
+        default: null, // Nếu không có voucher thì để null
     },
-    point: {
+    totalDiscount: {
         type: Number,
         default: 0,
     },
-    disCountSale : {
+    totalVoucherDiscount: {
+        type: Number,
+        default: 0,
+    },
+    originalPrice : {
+        type: Number,
+        default: 0,
+    },
+    totalDiscountSale : {
+        type: Number,
+        default: 0,
+    },
+    point: {
         type: Number,
         default: 0,
     },
@@ -76,6 +90,10 @@ const orderSchema = mongoose.Schema({
                 type: Number,
                 required: true,
             },
+            discountPrice : {
+                type: Number,
+                default: 0,
+            },
             size : {
                 type: String,
                 required: true,
@@ -91,6 +109,14 @@ const orderSchema = mongoose.Schema({
             quantity: {
                 type: Number,
                 required: true,
+            },
+            total: {
+                type: Number,
+                required: true,
+            },
+            hasReview : {
+                type: Boolean,
+                default: false,
             },
         }
     ],
