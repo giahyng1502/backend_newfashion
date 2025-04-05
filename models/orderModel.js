@@ -57,9 +57,15 @@ const orderSchema = mongoose.Schema({
         type: Number,
         default: 0,
     },
-    momo : {
-      type: Boolean,
-      default: false,
+    paymentId : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Payment',
+        default: null
+    },
+    paymentMethod: {
+        type: String,
+        enum: ['momo', 'cod'],
+        default: 'cod'
     },
     shippingAddress: {
         address: {
@@ -140,5 +146,52 @@ const orderSchema = mongoose.Schema({
     ]
 });
 
+const paymentSchema = mongoose.Schema({
+    orderId: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Order',
+        required: true,
+        unique: true
+    },
+    transId: {
+        type: String,
+        required: true
+    },
+    requestId: {
+        type: String,
+        required: true
+    },
+    payType: {
+        type: String,
+        default: ''
+    },
+    orderType: {
+        type: String,
+        default: ''
+    },
+    amount: {
+        type: Number,
+        required: true
+    },
+    isPaid: {
+        type: Boolean,
+        default: false
+    },
+    resultCode: {
+        type: Number,
+        default: null
+    },
+    message: {
+        type: String,
+        default: ''
+    },
+    responseTime: {
+        type: Date,
+        default: Date.now
+    },
+});
+
+const Payment = mongoose.model('Payment', paymentSchema);
+
 const Order = mongoose.model('Order', orderSchema);
-module.exports = Order;
+module.exports = {Payment, Order};

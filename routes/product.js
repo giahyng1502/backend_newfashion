@@ -15,7 +15,6 @@ router.get("/getOne/:productId", productController.getOne);
 router.put(
   "/putReview/:orderId",
   userMiddle,
-  upload.array("files", 5),
   reviewController.addReview
 );
 
