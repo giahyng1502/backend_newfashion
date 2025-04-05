@@ -2,19 +2,19 @@ var express = require("express");
 var router = express.Router();
 const { default: axios } = require("axios");
 const crypto = require("crypto");
+const {Payment, Order} = require("../models/orderModel");
 
 /* POST payment initiation */
 router.post("/payment", async function (req, res, next) {
-  const { priceProduct,rawOrderId } = req.body;
+  const { priceProduct,rawOrderId} = req.body;
   const accessKey = process.env.ACCESS_KEY_MOMO;
   const secretKey = process.env.MOMO_SECRET;
   const orderInfo = "pay with MoMo";
   //
   const partnerCode = "MOMO";
   ///redicectUrl : khi thanh toan thanh cong se chuyen den trang do
-  const redirectUrl = "https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b";
-  const ipnUrl = "http://160.30.21.59:3000/momo/callback";
-  // var ipnUrl = "https://facebook.com/";
+  const redirectUrl = "newfashion--android://orderdone";
+  const ipnUrl = "https://5577-58-186-78-252.ngrok-free.app/momo/callback";
   const requestType = "payWithMethod";
   const amount = priceProduct;
   const orderId = rawOrderId;
@@ -76,12 +76,61 @@ router.post("/payment", async function (req, res, next) {
   }
 });
 router.post("/callback", async (req, res) => {
-  console.log("--------------------CALLBACK----------------");
-  console.log(req.body);
-  // Process MoMo callback data here
-  //...
-  return res.status(200).json(req.body);
+  try {
+    console.log("--------------------CALLBACK----------------");
+    console.log(req.body);
+
+    const {
+      orderId,
+      transId,
+      requestId,
+      payType,
+      orderType,
+      amount,
+      resultCode,
+      message,
+    } = req.body;
+
+    // 1. Tìm đơn hàng theo orderCode
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
+    }
+
+    // 2. Lưu thông tin thanh toán
+    const paymentData = {
+      orderId: order._id, // Lưu ObjectId thật sự
+      transId,
+      requestId,
+      payType,
+      orderType,
+      amount,
+      isPaid: resultCode === 0,
+      resultCode,
+      message,
+      responseTime: new Date(),
+    };
+
+    const newPayment = await Payment.create(paymentData);
+    console.log(newPayment)
+    // 3. Cập nhật đơn hàng là đã thanh toán (nếu cần)
+    if (resultCode === 0) {
+      order.paymentId = newPayment._id;
+      order.paymentMethod = 'momo'; // nếu là thanh toán momo
+      order.status = 1; // ví dụ: chờ giao hàng
+      await order.save();
+      global.io.to(order.userId).emit("payment", {resultCode : 0});
+    }else {
+      global.io.to(order.userId).emit("payment", {resultCode : 1});
+    }
+    return res.status(200).json({ message: "OK", payment: newPayment });
+  } catch (e) {
+    console.log("Lỗi khi xử lý callback MoMo:", e);
+    return res.status(500).json({ message: "Lỗi server" });
+  }
 });
+
 router.post("/transaction", async (req, res) => {
   const { orderId } = req.body;
   console.log(orderId);
