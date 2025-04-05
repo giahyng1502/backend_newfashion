@@ -14,6 +14,5 @@ router.post("/:postId", userMiddle, commentController.commentPost);
 router.delete("/:commentId", userMiddle, commentController.deleteComment);
 
 // Like/Unlike một bình luận
-router.post("/like/:commentId", userMiddle, commentController.likeComment);
 
 module.exports = router;

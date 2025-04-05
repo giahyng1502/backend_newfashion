@@ -2,28 +2,38 @@ const { Comment, Post, Reply } = require("../models/postModel");
 
 const commentController = {
     // ✅ Lấy danh sách bình luận (có thêm tổng số comment)
-    getComment: async (req, res) => {
+     getComment : async (req, res) => {
         let page = parseInt(req.query.page) || 1;
         let limit = parseInt(req.query.limit) || 10;
         let skip = (page - 1) * limit;
-        const userId = req.user.userId;
 
         try {
             const { postId } = req.params;
 
-            // Lấy tổng số comment để hỗ trợ phân trang
+            // Lấy tổng số comment để phân trang
             const totalComments = await Comment.countDocuments({ postId });
 
-            // Lấy danh sách comment có phân trang
+            // Lấy danh sách comment
             const comments = await Comment.find({ postId })
                 .populate({ path: "user", select: "name avatar" })
+                .sort({ createdAt: 1 })
                 .skip(skip)
-                .limit(limit)
-            const dataReturn = comments.map((comment) => ({
-                ...comment.toObject(),
-                likes: comment.likes.length,
-                isLike: comment.likes.includes(userId),
-            }));
+                .limit(limit);
+
+            // Với mỗi comment, lấy tối đa 2 reply
+            const dataReturn = await Promise.all(
+                comments.map(async (comment) => {
+                    const replies = await Reply.find({ commentId: comment._id })
+                        .populate({ path: "user", select: "name avatar" })
+                        .sort({ createdAt: 1 })
+                        .limit(2);
+
+                    return {
+                        ...comment.toObject(),
+                        replies: replies.map(reply => reply.toObject()),
+                    };
+                })
+            );
 
             return res.status(200).json({
                 message: "Lấy danh sách bình luận thành công",
@@ -31,13 +41,13 @@ const commentController = {
                 totalComments,
                 totalPages: Math.ceil(totalComments / limit),
                 currentPage: page,
-
             });
         } catch (e) {
             console.error("Lỗi khi lấy danh sách bình luận:", e);
             return res.status(500).json({ message: e.message });
         }
     },
+
 
     // ✅ Thêm bình luận vào bài viết
     commentPost: async (req, res) => {
@@ -83,36 +93,6 @@ const commentController = {
         } catch (error) {
             console.error("Lỗi xoá comment:", error);
             return res.status(500).json({ success: false, message: "Lỗi server" });
-        }
-    },
-
-    // ✅ Like/Unlike comment
-    likeComment: async (req, res) => {
-        try {
-            const { commentId } = req.params;
-            const userId = req.user.userId;
-
-            const comment = await Comment.findById(commentId);
-            if (!comment) {
-                return res.status(404).json({ message: 'Bình luận không tồn tại' });
-            }
-
-            const isLiked = comment.likes.includes(userId);
-            if (isLiked) {
-                comment.likes = comment.likes.filter(id => id.toString() !== userId);
-            } else {
-                comment.likes.push(userId);
-            }
-
-            await comment.save();
-            return res.status(200).json({
-                message: isLiked ? 'Đã bỏ like bình luận' : 'Đã like bình luận',
-                totalLikes: comment.likes.length,
-                isLike: !isLiked
-            });
-        } catch (error) {
-            console.error("Lỗi khi like/unlike bình luận:", error);
-            return res.status(500).json({ message: 'Lỗi server', error: error.message });
         }
     },
 };

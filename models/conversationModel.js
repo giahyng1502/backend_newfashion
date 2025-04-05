@@ -7,12 +7,17 @@ const messageSchema = new mongoose.Schema(
       default: "",
     },
     imageUrl: {
-      type: String,
-      default: "",
+      type: [String],
+      default: [],
     },
     videoUrl: {
       type: String,
       default: "",
+    },
+    conversationId: {  // Thêm trường conversationId
+          type: mongoose.Schema.ObjectId,
+          ref: "Conversation",  // Liên kết với bảng Conversation
+          required: true,
     },
     seen: {
       type: Boolean,
@@ -41,12 +46,6 @@ const conversationSchema = new mongoose.Schema(
       required: true,
       ref: "User",
     },
-    messages: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: "Message",
-      },
-    ],
   },
   {
     timestamps: true,
