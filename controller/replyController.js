@@ -1,32 +1,19 @@
-const { Comment, Reply } = require("../models/postModel");
+const { Comment, Reply, Post} = require("../models/postModel");
 
 const replyController = {
     getReply: async (req, res) => {
-        let page = parseInt(req.query.page) || 1;
-        let limit = parseInt(req.query.limit) || 10;
-        let skip = (page - 1) * limit;
-        const userId = req.user.userId;
+        let offset = parseInt(req.query.offset) || 0;
+        let limit = parseInt(req.query.limit) || 5;
 
         try {
             const { commentId } = req.params;
-            const replies = await Reply.find({ commentId })
+            const replies = await Reply.find({commentId:commentId})
                 .populate("user", "name avatar")
-                .skip(skip)
+                .skip(offset)
                 .limit(limit)
+                .sort({createdAt: 1})
                 .lean();
-            const totalComments = await Reply.countDocuments({commentId: commentId});
-            const dataReturn = replies.map((reply) => {
-                return {
-                    ...reply,
-                    likes: reply.likes.length,
-                    isLike: reply.likes.includes(userId),
-                    totalPages: Math.ceil(totalComments / limit),
-                    totalReplies : totalComments,
-                    currentPage: page,
-                };
-            });
-
-            return res.status(200).json({ message: "Lấy danh sách reply thành công", data: dataReturn });
+            return res.status(200).json({ message: "Lấy danh sách reply thành công", data: replies });
         } catch (e) {
             console.log("Lỗi khi lấy danh sách reply:", e);
             return res.status(500).json({ message: e.message });
@@ -35,56 +22,28 @@ const replyController = {
     replyPost: async (req, res) => {
         try {
             const userId = req.user.userId;
-            const { content } = req.body;
+            const { content,postId } = req.body;
             const { commentId } = req.params;
 
             // Tạo reply mới
-            const newReply = new Reply({ user: userId, content, commentId });
+            console.log(req.body);
+            const newReply = new Reply({ user: userId, content, commentId,postId });
             await newReply.save();
 
             // Thêm reply vào danh sách của comment
             await Comment.findByIdAndUpdate(
                 commentId,
                 {$inc: { replyCount: 1 } }, // Tăng replyCount
-                { new: true }
             );
 
-            res.status(201).json({ success: true, reply: newReply });
+            await Post.findByIdAndUpdate(postId,{$inc : {commentCount: 1}});
+
+            return res.status(201).json({ success: true, reply: newReply });
         } catch (error) {
             console.log("Lỗi khi thêm reply:", error);
             res.status(500).json({ success: false, message: error.message });
         }
     },
-
-    likeReply: async (req, res) => {
-        try {
-            const { replyId } = req.params;
-            const userId = req.user.userId;
-
-            const reply = await Reply.findById(replyId);
-            if (!reply) {
-                return res.status(404).json({ message: "Reply không tồn tại" });
-            }
-
-            const isLiked = reply.likes.includes(userId);
-            if (isLiked) {
-                reply.likes = reply.likes.filter((id) => id.toString() !== userId); // Bỏ like
-            } else {
-                reply.likes.push(userId); // Thêm like
-            }
-
-            await reply.save();
-
-            return res.status(200).json({
-                message: isLiked ? "Bỏ like reply" : "Đã like reply",
-                data: reply,
-            });
-        } catch (error) {
-            console.log("Lỗi khi like/unlike reply:", error);
-            return res.status(500).json({ message: "Lỗi server", error: error.message });
-        }
-    },
-
     deleteReply: async (req, res) => {
         try {
             const userId = req.user.userId;

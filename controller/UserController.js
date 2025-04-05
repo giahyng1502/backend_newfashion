@@ -191,7 +191,7 @@ const UserController = {
     getMe: async (req, res) => {
         try {
             const id = req.user.userId;
-            const user = await User.findOne({_id: id}).populate('information').select('-password -role')
+            const user = await User.findOne({_id: id}).populate('information').select('-password')
             if (!user) {
                 return res.status(401).json({message: 'Người dùng không tồn tại'});
             }

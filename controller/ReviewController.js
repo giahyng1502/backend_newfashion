@@ -1,16 +1,15 @@
 const { uploadImage } = require("../lib/cloudflare");
 const { Review, Product } = require("../models/productModel");
-const Order = require("../models/orderModel");
+const {Order} = require("../models/orderModel");
 const reviewController = {
   addReview: async (req, res) => {
     try {
       const { orderId } = req.params;
-      const { content, productId } = req.body;
+      const { content, productId,images } = req.body;
       const rate = parseInt(req.body.rate);
       const userId = req.user.userId;
-      const files = req.files;
-      let images;
       console.log(userId);
+
       // 🔎 Kiểm tra đơn hàng hợp lệ và thuộc về người dùng
       const order = await Order.findOne({ $and : [{_id: orderId} , {userId : userId}] });
 
@@ -42,9 +41,7 @@ const reviewController = {
 
       //  Lấy thông tin màu sắc & kích thước đã mua
       const purchased = `Màu: ${itemInOrder.color?.nameColor || "Không xác định"} / Kích thước: ${itemInOrder.size}`;
-      if (files.length > 0) {
-        images = await uploadImage(files);
-      }
+      console.log('vewbhvre',images)
       // ✍️ Tạo review mới
       const newReview = new Review({
         content,

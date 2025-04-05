@@ -6,15 +6,15 @@ const replies = new mongoose.Schema({
             type: mongoose.Schema.ObjectId,
             ref: 'User', required: true
         },
-    likes: [
-        {
-            type: mongoose.Schema.ObjectId,
-            ref: 'User',
-        }
-    ],
     commentId: {
-            type: mongoose.Schema.ObjectId,
-            ref: 'Comment', required: true,
+        type: mongoose.Schema.ObjectId,
+        ref: 'Comment',
+        required: true,
+    },
+    postId: {
+        type : mongoose.Schema.ObjectId,
+        ref: 'Post',
+        required: true,
     },
     content: {
         type: String,
@@ -29,12 +29,6 @@ const commentSchema = new mongoose.Schema({
             type: mongoose.Schema.ObjectId,
             ref: 'User', required: true
         },
-    likes: [
-        {
-            type: mongoose.Schema.ObjectId,
-            ref: 'User',
-        }
-    ],
     replyCount: {
         type: Number,
         default : 0

@@ -10,10 +10,6 @@ const postController = {
             // const files = req.files;
             const user = req.user.userId;
 
-            // let image = [];
-            // if (files && files.length) {
-            //     image = await uploadImage(files);
-            // }
             if (!content) {
                 return res.status(400).json({ message: 'Nội dung bài viết không được để trống' });
             }
