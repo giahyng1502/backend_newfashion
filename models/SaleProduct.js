@@ -28,9 +28,9 @@ const saleProductSchema = new mongoose.Schema({
   }
 });
 
-// Tạo TTL Index trên `expireAt`
-// MongoDB sẽ tự động xóa các document sau thời gian `expireAt`
-saleProductSchema.index({ expireAt: 1 }, { expireAfterSeconds: 0 });
+// // Tạo TTL Index trên `expireAt`
+// // MongoDB sẽ tự động xóa các document sau thời gian `expireAt`
+// saleProductSchema.index({ expireAt: 1 }, { expireAfterSeconds: 0 });
 
 const SaleProduct = mongoose.model('SaleProduct', saleProductSchema);
 

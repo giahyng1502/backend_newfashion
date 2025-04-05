@@ -4,14 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Sửa logic bài post">
+    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Thêm chức năng tìm kiếm cho đơn hàng và thêm thuộc tính mã đơn hàng">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/commentController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/commentController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/UserController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/UserController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/orderController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/orderController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/productController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/productController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/replyController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/replyController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/SaleProduct.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/SaleProduct.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/generateJwtToken.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/generateJwtToken.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/middleware/AuthMiddle.js" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/AuthMiddle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/productModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/productModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/order.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/order.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/product.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/product.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,6 +127,12 @@
       <workItem from="1742918328479" duration="5829000" />
       <workItem from="1743003768036" duration="481000" />
       <workItem from="1743006182311" duration="8321000" />
+      <workItem from="1743077744659" duration="26729000" />
+      <workItem from="1743259937425" duration="3617000" />
+      <workItem from="1743311560761" duration="13000" />
+      <workItem from="1743316582094" duration="1527000" />
+      <workItem from="1743348646494" duration="8984000" />
+      <workItem from="1743479869261" duration="1730000" />
     </task>
     <task id="LOCAL-00001" summary="Hoàn thiện chức năng thêm , cập nhập sản phẩm , và review sản phẩm">
       <option name="closed" value="true" />
@@ -365,14 +374,21 @@
       <option name="project" value="LOCAL" />
       <updated>1742905681249</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Thêm chức năng tìm kiếm cho đơn hàng và thêm thuộc tính mã đơn hàng">
+      <option name="closed" value="true" />
+      <created>1743225914833</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1743225914833</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Cập nhập lại model cho phép lưu trữ lịch sử giao dịch và lịch sử xác nhận đơn hàng" />
     <MESSAGE value="hoàn thiện chức năng thêm sản phẩm giảm giá , cải thiện chức năng order khi người dùng mua hàng đang trong thời gian giảm giá" />
     <MESSAGE value="hoàn thiện chức năng CRUD category" />
     <MESSAGE value="hoàn thiện chức năng gửi tin nhắn về mail khi người dùng mua hàng và thêm chức năng quên mật khẩu bằng mail code" />
@@ -397,6 +413,7 @@
     <MESSAGE value="sửa logic cập nhập bài viết và thêm thực thể purchased vào review" />
     <MESSAGE value="Hoàn thiện chức năng review : Chỉ khi nào đơn hàng được giao thành công thì người dùng mới được review và chỉ được review 1 lần duy nhất 1 sản phẩm trên 1 đơn hàng" />
     <MESSAGE value="Sửa logic bài post" />
-    <option name="LAST_COMMIT_MESSAGE" value="Sửa logic bài post" />
+    <MESSAGE value="Thêm chức năng tìm kiếm cho đơn hàng và thêm thuộc tính mã đơn hàng" />
+    <option name="LAST_COMMIT_MESSAGE" value="Thêm chức năng tìm kiếm cho đơn hàng và thêm thuộc tính mã đơn hàng" />
   </component>
 </project>

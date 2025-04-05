@@ -1,10 +1,11 @@
 const { User } = require("../models/userModel");
 const Cart = require("../models/cartModel");
 const Voucher = require("../models/voucherModel");
-const Order = require("../models/orderModel");
 const SaleProduct = require("../models/SaleProduct");
 const {Product} = require("../models/productModel");
 const generateOrderCode = require("../lib/generateCode");
+const Notify = require("../models/notificationModel");
+const {Order} = require("../models/orderModel");
 const allowedStatus = [0, 1, 2, 3, 4, 5];
 const orderController = {
     create: async (req, res) => {
@@ -146,7 +147,10 @@ const orderController = {
 
             // Tạo mã đơn hàng
             const orderCode = `OD${generateOrderCode(userId)}`;
-
+            const statusHistory = [{
+                status: 0,
+                updatedBy : userId
+            }]
             // Tạo đơn hàng
             const order = new Order({
                 userId: userId,
@@ -160,6 +164,7 @@ const orderController = {
                 voucherId: voucherId || null,
                 point: point || null,
                 shippingAddress: { address, phoneNumber, name },
+                statusHistory
             });
 
             await order.save();
@@ -327,7 +332,24 @@ const orderController = {
                     $inc: { point: rewardPoints }
                 });
             }
-
+            const messages = {
+                0: `Đơn hàng đang chờ xác nhận.`,
+                1: `Đơn hàng đã được xác nhận và đang chờ giao hàng.`,
+                2: `Đơn hàng đang được vận chuyển đến bạn.`,
+                3: `Đơn hàng đã giao thành công. Cảm ơn bạn đã mua sắm!`,
+                4: `Đơn hàng đã bị hủy.`,
+                5: `Đơn hàng đã được hoàn lại.`,
+            };
+            const product = await Product.findById(orderStatus.items[0].productId);
+            const notification = new Notify({
+                userId : orderStatus.userId,
+                orderId : orderId,
+                type : 'order_update',
+                image : product?.image[0],
+                message : messages[status]
+            });
+            const newNotify = await notification.save();
+            global.io.to(orderStatus.userId.toString()).emit("orderStatusUpdate", newNotify);
             return res.status(200).json({ message: "Cập nhật đơn hàng thành công", data: orderStatus });
         } catch (e) {
             console.error("Lỗi xảy ra khi cập nhật trạng thái đơn hàng: " + e.message);

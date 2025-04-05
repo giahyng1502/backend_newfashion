@@ -21,6 +21,8 @@ var authRouter = require("./routes/authRouter");
 var momoRouter = require("./routes/momoRouter");
 var cloudRouter = require("./routes/cloudRouter");
 var messageRouter = require("./routes/messageRouter");
+var dashBoardRouter = require("./routes/dashboard");
+var notificationRouter = require("./routes/notificationRouter");
 
 var { app } = require("./lib/socketConfig");
 var db = require("./models/db");
@@ -48,9 +50,11 @@ app.use("/mail", emailRouter);
 app.use("/auth", authRouter);
 app.use("/momo", momoRouter);
 app.use("/comment", commentRouter);
-app.use("/reply", replyRouter);
+app.use("/replies", replyRouter);
 app.use("/upload", cloudRouter);
 app.use("/message", messageRouter);
+app.use("/dashboard", dashBoardRouter);
+app.use("/notification",notificationRouter );
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
