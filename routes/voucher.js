@@ -4,13 +4,15 @@ const voucherController = require("../controller/voucherController");
 var router = express.Router();
 
 /* GET users listing. */
-router.get('/getAll',voucherController.getAll);
+router.get('/getAll',voucherController.getByUser);
+
+router.get('/getAllVoucher',verifyAdmin,voucherController.getAll);
 
 // router.get('/checkVoucher',voucherController.checkVoucher);
 
-router.post('/create',voucherController.createVoucher);
+router.post('/create',verifyAdmin,voucherController.createVoucher);
 
-router.put('/update/:voucherId',voucherController.updateVoucher);
+router.put('/update/:voucherId',verifyAdmin,voucherController.updateVoucher);
 
-router.delete('/delete/:voucherId',voucherController.removeVoucher);
+router.delete('/delete/:voucherId',verifyAdmin,voucherController.removeVoucher);
 module.exports = router;

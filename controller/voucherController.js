@@ -1,17 +1,45 @@
 const Voucher = require("../models/voucherModel");
 const mongoose = require("mongoose");
 const voucherController = {
+    getByUser: async (req, res) => {
+        try {
+            const date = new Date();
+
+            // Lọc các voucher có startDate > ngày hiện tại và endDate >= ngày hiện tại, đồng thời còn limit
+            const vouchers = await Voucher.find({
+                startDate: { $lte: date },
+                endDate: { $gte: date },
+                limit: { $gt: 0 }
+            });
+
+            return res.status(200).json({
+                message: 'Lấy voucher thành công',
+                data: vouchers
+            });
+
+        } catch (e) {
+            console.log("Lỗi khi lấy voucher: " + e.message);
+            return res.status(500).json({
+                message: 'Lỗi server',
+                error: e.message
+            });
+        }
+    },
     getAll: async (req, res) => {
         try {
             const vouchers = await Voucher.find();
-            return res.status(200).json({message : 'Lấy voucher thành công',data: vouchers});
 
-        }catch (e) {
-            console.log("Thêm voucher xẩy ra lỗi : "+e.message);
+            return res.status(200).json({
+                message: 'Lấy voucher thành công',
+                data: vouchers
+            });
+
+        } catch (e) {
+            console.log("Lỗi khi lấy voucher: " + e.message);
             return res.status(500).json({
-                message : 'Lỗi server',
+                message: 'Lỗi server',
                 error: e.message
-            })
+            });
         }
     },
     createVoucher : async (req, res) => {
