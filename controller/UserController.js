@@ -85,8 +85,7 @@ const UserController = {
     updateUser: async (req, res) => {
         try {
             const userId = req.user.userId;
-            const {name, password} = req.body;
-            const files = req.files;
+            const {name, password,avatar} = req.body;
 
             if (!userId) {
                 return res.status(400).json({message: "Bạn cần đăng nhập để thực hiện chức năng này"});
@@ -94,19 +93,13 @@ const UserController = {
 
             let userUpdate = {};
 
-            // Upload ảnh nếu có
-            if (files && files.length > 0) {
-                const image = await uploadImage(files);
-                if (image && image.length > 0) {
-                    userUpdate.avatar = image[0];
-                }
-            }
-
             // Cập nhật name
             if (name) {
                 userUpdate.name = name;
             }
-
+            if (avatar) {
+                userUpdate.avatar = avatar;
+            }
             // Hash mật khẩu trước khi cập nhật
             if (password) {
                 const salt = await bcrypt.genSalt(10);

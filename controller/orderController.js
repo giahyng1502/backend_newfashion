@@ -152,20 +152,43 @@ const orderController = {
                 updatedBy : userId
             }]
             // Tạo đơn hàng
-            const order = new Order({
-                userId: userId,
-                orderCode,
-                items: items,
-                originalPrice,
-                totalPrice,
-                totalDiscount,
-                totalVoucherDiscount,
-                totalDiscountSale,
-                voucherId: voucherId || null,
-                point: point || null,
-                shippingAddress: { address, phoneNumber, name },
-                statusHistory
-            });
+            let order;
+            if (momo === 'momo') {
+                order = new Order({
+                    userId: userId,
+                    orderCode,
+                    items: items,
+                    originalPrice,
+                    totalPrice,
+                    status : 6,
+                    totalDiscount,
+                    paymentMethod: momo,
+                    totalVoucherDiscount,
+                    totalDiscountSale,
+                    voucherId: voucherId || null,
+                    point: point || null,
+                    shippingAddress: { address, phoneNumber, name },
+                    statusHistory : {
+                        status: 6,
+                        updatedBy : userId
+                    }
+                });
+            }else {
+                order = new Order({
+                    userId: userId,
+                    orderCode,
+                    items: items,
+                    originalPrice,
+                    totalPrice,
+                    totalDiscount,
+                    totalVoucherDiscount,
+                    totalDiscountSale,
+                    voucherId: voucherId || null,
+                    point: point || null,
+                    shippingAddress: { address, phoneNumber, name },
+                    statusHistory
+                });
+            }
 
             await order.save();
 
@@ -331,6 +354,7 @@ const orderController = {
                 await User.findByIdAndUpdate(orderStatus.userId, {
                     $inc: { point: rewardPoints }
                 });
+                console.log('cdsiahc')
             }
             const messages = {
                 0: `Đơn hàng đang chờ xác nhận.`,
@@ -358,7 +382,7 @@ const orderController = {
     },
     searchOrder: async (req, res) => {
         try {
-            let { page = 1, limit = 10, sortField = "dateCreated", sortOrder = "desc", search } = req.query;
+            let { page = 1, limit = 10, sortField = "status", sortOrder = "asc", search } = req.query;
 
             // Đảm bảo `page` và `limit` luôn là số nguyên dương
             page = Math.max(1, parseInt(page)) || 1;

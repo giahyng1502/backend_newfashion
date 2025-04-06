@@ -3,6 +3,8 @@ var router = express.Router();
 const { default: axios } = require("axios");
 const crypto = require("crypto");
 const {Payment, Order} = require("../models/orderModel");
+const {sendMail} = require("../service/emailService");
+const {User} = require("../models/userModel");
 
 /* POST payment initiation */
 router.post("/payment", async function (req, res, next) {
@@ -14,7 +16,7 @@ router.post("/payment", async function (req, res, next) {
   const partnerCode = "MOMO";
   ///redicectUrl : khi thanh toan thanh cong se chuyen den trang do
   const redirectUrl = "newfashion--android://orderdone";
-  const ipnUrl = "https://5577-58-186-78-252.ngrok-free.app/momo/callback";
+  const ipnUrl = "https://b465-58-186-78-252.ngrok-free.app/momo/callback";
   const requestType = "payWithMethod";
   const amount = priceProduct;
   const orderId = rawOrderId;
@@ -119,7 +121,19 @@ router.post("/callback", async (req, res) => {
       order.paymentId = newPayment._id;
       order.paymentMethod = 'momo'; // nếu là thanh toán momo
       order.status = 1; // ví dụ: chờ giao hàng
+      order.statusHistory.push({
+        status: 7,
+        updatedBy : order.userId
+      })
       await order.save();
+      const user = await User.findById(order.userId)
+      await sendMail(
+          user?.email,
+          'Hóa đơn thanh toán',
+          'Cảm ơn bạn đã đặt hàng tại NewFashion!',
+          order.items,
+          amount
+      );
       global.io.to(order.userId).emit("payment", {resultCode : 0});
     }else {
       global.io.to(order.userId).emit("payment", {resultCode : 1});

@@ -19,7 +19,7 @@ const orderSchema = mongoose.Schema({
         type: Number,
         required: true,
         default: 0,
-        enum: [0, 1, 2, 3, 4, 5], // Chỉ chấp nhận các giá trị này
+        enum: [0, 1, 2, 3, 4, 5, 6], // Chỉ chấp nhận các giá trị này
     },
     // 0 = Chờ xác nhận
     // 1 = Chờ giao hàng
@@ -27,6 +27,7 @@ const orderSchema = mongoose.Schema({
     // 3 = Giao hàng thành công
     // 4 = Hủy đơn hàng
     // 5 = Hoàn đơn hàng
+    // 6 = Chưa thanh toán
     totalPrice: {
         type: Number,
         required: true,

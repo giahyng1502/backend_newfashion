@@ -9,37 +9,73 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const sendMail = async (to, subject, text) => {
+const sendMail = async (to, subject, text, data, amount) => {
     try {
+        // Tạo từng dòng trong bảng HTML từ mảng sản phẩm `data`
+        const tableRows = data.map(item => {
+            return `
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ddd;">${item.productName} màu ${item.color.nameColor}</td>
+                    <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${item.quantity}</td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">${item.price.toLocaleString()}₫</td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">${item.discountPrice.toLocaleString()}₫</td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">${item.total.toLocaleString()}₫</td>
+                </tr>
+            `;
+        }).join('');
+
+        const totalPrice = amount.toLocaleString() + '₫';
+
         const emailHTML = `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;">
-                <h1 style="color: #333; text-align: center;">📩 New Fashion</h1>
-                <p style="font-size: 16px; color: #555; line-height: 1.5;">${text}</p>
-                <div style="text-align: center; margin-top: 20px;">
-                    <a href="https://shopzoe.com" style="text-decoration: none;">
+           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;">
+                <h1 style="color: #333; text-align: center;">🧾 Hóa đơn thanh toán</h1>
+                <p style="font-size: 16px; color: #555; line-height: 1.5;">Cảm ơn bạn đã mua sắm tại <strong>NewFashion</strong>! Dưới đây là chi tiết đơn hàng của bạn:</p>
+                
+                <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                    <thead>
+                        <tr style="background-color: #eee; text-align: left;">
+                            <th style="padding: 10px; border: 1px solid #ddd;">Sản phẩm</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Số lượng</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Giá gốc</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Giá khuyến mãi(Nếu có)</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableRows}
+                    </tbody>
+                </table>
+
+                <div style="text-align: right; margin-top: 10px;">
+                    <p style="font-size: 16px; color: #333;"><strong>Tổng cộng: ${totalPrice}</strong></p>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="newfashion--android://" style="text-decoration: none;">
                         <button style="background-color: #ff5722; color: white; padding: 12px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
-                            🛒 Mua sắm ngay
+                            🔁 Mua sắm thêm
                         </button>
                     </a>
                 </div>
-                <p style="font-size: 14px; color: #999; text-align: center; margin-top: 20px;">Nếu bạn không yêu cầu email này, vui lòng bỏ qua.</p>
-            </div>
-        `;
+
+                <p style="font-size: 14px; color: #999; text-align: center; margin-top: 20px;">Nếu bạn không thực hiện giao dịch này, vui lòng bỏ qua email này.</p>
+            </div>`;
 
         const info = await transporter.sendMail({
             from: `"NewFashion Support" <${process.env.EMAIL_USER}>`,
             to,
             subject,
-            html: emailHTML, // ✅ Sử dụng HTML đẹp
+            html: emailHTML,
         });
 
-        console.log('Email đã gửi thành công: ' + info.response);
+        console.log('✅ Email đã gửi thành công: ' + info.response);
         return info;
     } catch (error) {
-        console.error('Lỗi khi gửi email:', error);
+        console.error('❌ Lỗi khi gửi email:', error);
         throw error;
     }
 };
+
 
 const sendOTP = async (to, otp) => {
     const emailHTML = `
