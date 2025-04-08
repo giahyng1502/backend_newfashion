@@ -2,7 +2,8 @@ const OTP = require("../models/otpModel");
 const { sendOTP } = require("../service/emailService");
 const crypto = require("crypto");
 const {User} = require("../models/userModel");
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcryptjs');
+
 
 exports.forgotPassword = async (req, res) => {
     try {
