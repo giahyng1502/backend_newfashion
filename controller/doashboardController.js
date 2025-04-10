@@ -1,66 +1,98 @@
 const moment = require("moment");
 const {Order} = require("../models/orderModel");
+const {Product} = require("../models/productModel");
+const {User} = require("../models/userModel");
 
 const dashboardController = {
     getRevenueStats: async (req, res) => {
         try {
-            const { time } = req.query; // Nhận tham số từ query string
+            const { time } = req.query;
+            const now = moment();
 
-            let startDate, previousStartDate, previousEndDate;
+            let startDate, endDate, format;
+            const labels = [];
 
-            // Xác định khoảng thời gian hiện tại và kỳ trước
-            if (time === "today") {
-                startDate = moment().startOf("day");
-                previousStartDate = moment().subtract(1, "day").startOf("day");
-                previousEndDate = moment().subtract(1, "day").endOf("day");
-            } else if (time === "week") {
-                startDate = moment().startOf("isoWeek");
-                previousStartDate = moment().subtract(1, "week").startOf("isoWeek");
-                previousEndDate = moment().subtract(1, "week").endOf("isoWeek");
-            } else if (time === "month") {
-                startDate = moment().startOf("month");
-                previousStartDate = moment().subtract(1, "month").startOf("month");
-                previousEndDate = moment().subtract(1, "month").endOf("month");
+            if (time === "week") {
+                startDate = now.clone().startOf("isoWeek");
+                endDate = now.clone().endOf("isoWeek");
+                format = "%d-%m-%Y";
+
+                const current = startDate.clone();
+                while (current.isSameOrBefore(endDate)) {
+                    labels.push(current.format("DD-MM-YYYY"));
+                    current.add(1, "day");
+                }
+
+            }else if (time === "month") {
+                startDate = now.clone().startOf("month");
+                endDate = now.clone().endOf("month");
+                format = "Week %V-%G"; // ISO Week format
+
+                const current = startDate.clone().startOf("isoWeek");
+                while (current.isSameOrBefore(endDate)) {
+                    labels.push(`Week ${current.isoWeek()}-${current.isoWeekYear()}`);
+                    current.add(1, "week");
+                }
+
             } else if (time === "year") {
-                startDate = moment().startOf("year");
-                previousStartDate = moment().subtract(1, "year").startOf("year");
-                previousEndDate = moment().subtract(1, "year").endOf("year");
+                startDate = now.clone().startOf("year");
+                endDate = now.clone().endOf("year");
+                format = "%m-%Y";
+
+                const current = startDate.clone();
+                while (current.isSameOrBefore(endDate)) {
+                    labels.push(current.format("MM-YYYY"));
+                    current.add(1, "month");
+                }
+            } else {
+                return res.status(400).json({ message: "Giá trị 'time' không hợp lệ (chỉ nhận: week, month, year)" });
             }
 
-            // Tạo điều kiện truy vấn
-            const matchCondition = startDate ? { dateCreated: { $gte: startDate.toDate() } } : {};
-            const previousMatchCondition =
-                previousStartDate && previousEndDate
-                    ? { dateCreated: { $gte: previousStartDate.toDate(), $lte: previousEndDate.toDate() } }
-                    : {};
-
-            // 🚀 Tính tổng doanh thu và số đơn hàng kỳ hiện tại
-            const currentRevenueData = await Order.aggregate([
-                { $match: matchCondition },
-                { $group: { _id: null, totalRevenue: { $sum: "$totalPrice" }, totalOrders: { $sum: 1 } } },
+            // Truy vấn dữ liệu từ MongoDB
+            const currentData = await Order.aggregate([
+                {
+                    $match: {
+                        dateCreated: {
+                            $gte: startDate.toDate(),
+                            $lte: endDate.toDate()
+                        },
+                        status: 3
+                    }
+                },
+                {
+                    $group: {
+                        _id: { $dateToString: { format, date: "$dateCreated" } },
+                        totalRevenue: { $sum: "$totalPrice" },
+                        totalOrders: { $sum: 1 }
+                    }
+                },
+                {
+                    $sort: { _id: 1 }
+                }
             ]);
+            // Map dữ liệu theo nhãn thời gian
+            const dataMap = {};
+            currentData.forEach(item => {
+                dataMap[item._id] = {
+                    label: item._id,
+                    totalRevenue: item.totalRevenue,
+                    totalOrders: item.totalOrders
+                };
+            });
 
-            // 📉 Tính tổng doanh thu và số đơn hàng kỳ trước
-            const previousRevenueData = await Order.aggregate([
-                { $match: previousMatchCondition },
-                { $group: { _id: null, totalRevenue: { $sum: "$totalPrice" }, totalOrders: { $sum: 1 } } },
-            ]);
-
-            // 🎯 Lấy giá trị doanh thu kỳ hiện tại và kỳ trước
-            const currentRevenue = currentRevenueData.length > 0 ? currentRevenueData[0].totalRevenue : 0;
-            const previousRevenue = previousRevenueData.length > 0 ? previousRevenueData[0].totalRevenue : 0;
-
-            // 📊 Tính tỷ lệ tăng trưởng (%)
-            let revenueGrowthRate =
-                previousRevenue > 0 ? ((currentRevenue - previousRevenue) / previousRevenue) * 100 : (currentRevenue > 0 ? 100 : 0);
+            const responseData = labels.map(label => ({
+                label,
+                totalRevenue: dataMap[label]?.totalRevenue || 0,
+                totalOrders: dataMap[label]?.totalOrders || 0
+            }));
 
             return res.status(200).json({
-                time: time || "all",
-                totalRevenue: currentRevenue,
-                totalOrders: currentRevenueData.length > 0 ? currentRevenueData[0].totalOrders : 0,
-                previousRevenue: previousRevenue,
-                revenueGrowthRate: revenueGrowthRate.toFixed(2) + "%", // Format 2 chữ số thập phân
+                time,
+                from: startDate.format("DD-MM-YYYY"),
+                to: endDate.format("DD-MM-YYYY"),
+                data: responseData
             });
+
         } catch (error) {
             return res.status(500).json({ message: "Lỗi server", error: error.message });
         }
@@ -108,66 +140,136 @@ const dashboardController = {
             return res.status(500).json({ message: "Lỗi server", error: error.message });
         }
     },
-     getTopSellingProducts : async (req, res) => {
-         try {
-             // Tính toán tổng số lượng bán và doanh thu từ mỗi sản phẩm
-             const topSellingProducts = await Order.aggregate([
-                 { $unwind: "$item" }, // Giả sử mỗi đơn hàng có trường 'item' là một mảng chứa các sản phẩm
-                 {
-                     $group: {
-                         _id: "$item.productId", // Nhóm theo productId trong đơn hàng
-                         totalSold: { $sum: "$item.quantity" }, // Tổng số lượng bán
-                         totalRevenue: { $sum: { $multiply: ["$item.quantity", "$item.price"] } }, // Tổng doanh thu từ sản phẩm
-                     },
-                 },
-                 { $sort: { totalSold: -1 } }, // Sắp xếp theo tổng số lượng bán (giảm dần)
-                 { $limit: 5 }, // Chỉ lấy 5 sản phẩm bán chạy nhất
-                 {
-                     $lookup: {
-                         from: "products", // Tên collection sản phẩm
-                         localField: "_id",
-                         foreignField: "_id",
-                         as: "productDetails", // Thông tin chi tiết sản phẩm
-                     },
-                 },
-                 { $unwind: "$productDetails" }, // Giải nén thông tin chi tiết sản phẩm
-                 {
-                     $project: {
-                         productName: "$productDetails.name", // Tên sản phẩm
-                         totalSold: 1, // Tổng số lượng bán
-                         totalRevenue: 1, // Tổng doanh thu
-                         cost: "$productDetails.cost", // Lấy giá cost từ sản phẩm
-                     },
-                 },
-                 {
-                     $addFields: {
-                         // Tính toán doanh thu sau khi trừ đi giá cost
-                         actualRevenue: { $subtract: ["$totalRevenue", { $multiply: ["$cost", "$totalSold"] }] },
-                     },
-                 },
-                 {
-                     $project: {
-                         productName: 1,
-                         totalSold: 1,
-                         totalRevenue: 1,
-                         cost: 1,
-                         actualRevenue: 1, // Doanh thu thực tế sau khi trừ chi phí
-                     },
-                 },
-             ]);
 
-             // Trả về kết quả
-             return res.status(200).json({
-                 topSellingProducts,
-             });
-         } catch (error) {
-             console.error(error);
-             return res.status(500).json({
-                 message: "Lỗi server trong khi thống kê sản phẩm bán chạy.",
-                 error: error.message,
-             });
-         }
+     getTopSellingProducts : async (req, res) => {
+        try {
+            const result = await Order.aggregate([
+                { $unwind: "$items" }, // Tách từng sản phẩm
+                {
+                    $match: {
+                        status: 3 // Chỉ lấy đơn hàng đã giao thành công
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$items.productId",
+                        totalQuantitySold: { $sum: "$items.quantity" },
+                        totalRevenue: { $sum: "$items.total" }
+                    }
+                },
+                { $sort: { totalQuantitySold: -1 } },
+                { $limit: 5 },
+                {
+                    $lookup: {
+                        from: "products",
+                        localField: "_id",
+                        foreignField: "_id",
+                        as: "product"
+                    }
+                },
+                {
+                    $unwind: "$product"
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        productId: "$product._id",
+                        name: "$product.name",
+                        image: "$product.image",
+                        totalQuantitySold: 1,
+                        totalRevenue: 1
+                    }
+                }
+            ]);
+
+            return res.status(200).json({
+                topProducts: result
+            });
+        } catch (err) {
+            return res.status(500).json({
+                message: "Server Error",
+                error: err.message
+            });
+        }
+    },
+
+
+    // Lấy sản phẩm sắp hết hàng (< 10 sản phẩm còn lại)
+     getLowStockProducts : async (req, res) => {
+        try {
+            const lowStockProducts = await Product.find({
+                stock: { $lt: 10 }
+            }).select('name image stock sold');
+
+            res.status(200).json({
+                success: true,
+                data: lowStockProducts
+            });
+        } catch (err) {
+            console.error("Error fetching low stock products:", err);
+            res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            });
+        }
+    },
+
+
+
+
+     getUserStats : async (req, res) => {
+        try {
+            const { time } = req.query;
+
+            let startDate, endDate;
+
+            if (time === "today") {
+                startDate = moment().startOf("day");
+                endDate = moment().endOf("day");
+            } else if (time === "week") {
+                startDate = moment().startOf("isoWeek");
+                endDate = moment().endOf("isoWeek");
+            } else if (time === "month") {
+                startDate = moment().startOf("month");
+                endDate = moment().endOf("month");
+            } else if (time === "year") {
+                startDate = moment().startOf("year");
+                endDate = moment().endOf("year");
+            } else {
+                // Nếu không có thời gian hợp lệ, mặc định là tháng hiện tại
+                startDate = moment().startOf("month");
+                endDate = moment().endOf("month");
+            }
+
+            const newUsers = await User.countDocuments({
+                createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() }
+            });
+
+            const totalAdmin = await User.countDocuments({ role: 2 });
+            const totalStaff = await User.countDocuments({ role: 1 });
+            const normalUser = await User.countDocuments({ role: 0 });
+
+            const percentageOfTotal = normalUser > 0
+                ? ((newUsers / normalUser) * 100).toFixed(2)
+                : "0.00";
+
+            return res.status(200).json({
+                time: time || "month",
+                newUsers,
+                totalAdmin,
+                totalStaff,
+                normalUser,
+                userGrowth: {
+                    percentageOfTotal: `${percentageOfTotal}%`
+                }
+            });
+        } catch (error) {
+            return res.status(500).json({ message: "Server error", error: error.message });
+        }
     }
+
+
+
 };
 
 module.exports = dashboardController;

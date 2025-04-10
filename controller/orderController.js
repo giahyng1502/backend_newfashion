@@ -133,9 +133,11 @@ const orderController = {
                 if (point > totalPrice) {
                     totalPrice = 0;
                     user.point -= totalPrice;
+                    totalDiscount += totalPrice;
                 } else {
                     totalPrice -= point;
                     user.point -= point;
+                    totalDiscount += point;
                 }
                 await user.save();
             }

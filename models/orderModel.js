@@ -41,10 +41,12 @@ const orderSchema = mongoose.Schema({
     totalDiscount: {
         type: Number,
         default: 0,
+        // tổng số tiền giảm từ tất cả khuyến mãi
     },
     totalVoucherDiscount: {
         type: Number,
         default: 0,
+        // tổng tiền giảm từ voucher
     },
     originalPrice : {
         type: Number,
@@ -53,10 +55,12 @@ const orderSchema = mongoose.Schema({
     totalDiscountSale : {
         type: Number,
         default: 0,
+        // tổng tiền giảm từ chương trình giảm giá sản phẩm
     },
     point: {
         type: Number,
         default: 0,
+        // Số tiền giảm từ poin của người dùng
     },
     paymentId : {
         type: mongoose.Schema.Types.ObjectId,
@@ -100,6 +104,7 @@ const orderSchema = mongoose.Schema({
             discountPrice : {
                 type: Number,
                 default: 0,
+                // số tiền giảm từ chương trình khuyến mãi
             },
             size : {
                 type: String,
