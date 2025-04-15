@@ -31,7 +31,7 @@ const orderController = {
             // Lọc sản phẩm được chọn để tạo đơn hàng
             const selectedCart = cart.products.filter(item => item.isSelected === true);
             if (selectedCart.length === 0) {
-                return res.status(400).json({ message: 'Không có sản phẩm nào được chọn' });
+                return res.status(400).json({ message: 'Vui lòng chọn sản phẩm bạn muốn mua trước' });
             }
 
             // Tính tổng tiền sản phẩm trước khi giảm giá
@@ -259,10 +259,11 @@ const orderController = {
             if (!order) {
                 return res.status(404).json({message:'Đơn hàng này không tồn tại'})
             }
-                if (order.status !== 0) {
-                    return res.status(400).json({message :'Bạn chỉ có thể hủy đơn hàng khi đơn hàng đang ở trong trạng thái chờ xác nhận'});
-                }
-                if (userId.toString() !== order.userId.toString()) {
+            if (![0, 6].includes(order.status)) {
+                return res.status(400).json({ message: 'Bạn chỉ có thể hủy đơn hàng khi đơn hàng đang ở trong trạng thái chờ xác nhận hoặc chờ thanh toán' });
+            }
+
+            if (userId.toString() !== order.userId.toString()) {
                     return res.status(400).json({message :'Bạn không có quyền hủy'});
                 }
 

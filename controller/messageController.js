@@ -63,13 +63,12 @@ const messageController = {
       if (!conversation) {
         conversation = new ConversationModel({sender : userId, receiver: receiver});
       }
-      console.log(conversation)
       const messages = await MessageModel.find({ conversationId : conversation._id }) // Lọc theo conversationId
-          .sort({ createdAt: 1 })
+          .sort({ createdAt: -1 })
           .limit(limit)
           .skip(offset);
-
-      res.status(200).json({ messages });
+      const message = messages.reverse();
+      res.status(200).json({ messages:message });
     } catch (err) {
       console.error("Error fetching messages:", err);
       res.status(500).json({ error: err.message });

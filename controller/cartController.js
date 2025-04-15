@@ -35,9 +35,9 @@ const cartController = {
         addToCart: async (req, res) => {
             try {
                 const userId = req.user.userId;
-                const { productId, quantity, size, color } = req.body;
+                const { productId, quantity, size, color,name } = req.body;
 
-                let cart = await Cart.findOne({ userId });
+                let cart = await Cart.findOne({ userId }).populate("products.productId").sort({ "products.addedAt": -1 });
                 if (!cart) {
                     cart = new Cart({ userId, products: [], totalPrice: 0 });
                 }
@@ -73,8 +73,6 @@ const cartController = {
                 }
 
                 // 🧾 Cập nhật tổng giá tiền của giỏ hàng
-                cart.total = await calculateTotalPrice(cart.products);
-
                 await cart.save();
                 return res.status(200).json({ message: "Thêm vào giỏ hàng thành công", cart });
             } catch (e) {
@@ -101,7 +99,7 @@ const cartController = {
             }
 
             // Tìm giỏ hàng của user
-            let cart = await Cart.findOne({ userId });
+            let cart = await Cart.findOne({ userId }).populate("products.productId").sort({ "products.addedAt": -1 });
             if (!cart) {
                 return res.status(404).json({ message: "Giỏ hàng không tồn tại" });
             }
@@ -137,9 +135,10 @@ const cartController = {
                 cart.products[index].isSelected = isSelected;
                 cart.products[index].price = product.price * (1 - discount / 100); // Cập nhật giá sau giảm giá
             }
+            const productIsSelected = cart.products.filter(item => item.isSelected);
 
             // Cập nhật tổng tiền giỏ hàng
-            cart.total = await calculateTotalPrice(cart.products);
+            cart.total = await calculateTotalPrice(productIsSelected);
 
             // Lưu thay đổi vào DB
             await cart.save();
@@ -168,7 +167,7 @@ const cartController = {
                 return res.status(400).json({message : 'Vui lòng chọn sản phẩm muốn xóa'})
             }
             // Cập nhật tổng tiền
-            cart.total = await calculateTotalPrice(cart.products);
+            cart.total = 0;
 
             await cart.save();
             return res.status(200).json({ message: `Xóa ${deletedCount} sản phẩm khỏi giỏ hàng thành công`, cart });
@@ -183,7 +182,12 @@ const cartController = {
 async function calculateTotalPrice(products) {
     let total = 0;
     for (let item of products) {
-            total += item.price * item.quantity; // Sử dụng giá đã giảm (nếu có)
+        const price = item.price || 0;
+        const quantity = item.quantity || 1;
+        const discount = item.disCountSale || 0;
+
+        const discountedPrice = price - (price * (discount / 100));
+        total += discountedPrice * quantity;
     }
     return total;
 }

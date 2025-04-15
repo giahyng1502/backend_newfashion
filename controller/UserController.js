@@ -58,7 +58,7 @@ const UserController = {
     register: async (req, res) => {
         try {
             const {name, email, password} = req.body;
-            const normalizedEmail = email.toLowerCase(); // Chuyển email thành chữ thường
+            const normalizedEmail = email.toLowerCase().trim(); // Chuyển email thành chữ thường
 
             let user = await User.findOne({email: normalizedEmail});
             if (!user) {
@@ -69,7 +69,7 @@ const UserController = {
                 if (!saveUser) {
                     return res.status(400).json({message: 'Tạo tài khoản thất bại'})
                 }
-                const userCheck = await User.findOne({email: email});
+                const userCheck = await User.findOne({email: normalizedEmail});
                 if (user) {
                     const token = generateJwtToken(user)
                     return res.status(200).json({message: 'Đăng nhập thành công', token: token, data: userCheck});

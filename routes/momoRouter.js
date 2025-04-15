@@ -8,7 +8,7 @@ const {User} = require("../models/userModel");
 
 /* POST payment initiation */
 router.post("/payment", async function (req, res, next) {
-  const { priceProduct,rawOrderId} = req.body;
+  const { priceProduct,rawOrderId,idOrder} = req.body;
   const accessKey = process.env.ACCESS_KEY_MOMO;
   const secretKey = process.env.MOMO_SECRET;
   const orderInfo = "pay with MoMo";
@@ -16,12 +16,12 @@ router.post("/payment", async function (req, res, next) {
   const partnerCode = "MOMO";
   ///redicectUrl : khi thanh toan thanh cong se chuyen den trang do
   const redirectUrl = "newfashion--android://orderdone";
-  const ipnUrl = "https://b465-58-186-78-252.ngrok-free.app/momo/callback";
+  const ipnUrl = "https://0928-58-186-78-252.ngrok-free.app/momo/callback";
   const requestType = "payWithMethod";
   const amount = priceProduct;
   const orderId = rawOrderId;
   const requestId = rawOrderId;
-  const extraData = "";
+  const extraData = idOrder;
   const orderGroupId = "";
   const autoCapture = true;
   const lang = "vi";
@@ -89,12 +89,13 @@ router.post("/callback", async (req, res) => {
       payType,
       orderType,
       amount,
+      extraData,
       resultCode,
       message,
     } = req.body;
 
     // 1. Tìm đơn hàng theo orderCode
-    const order = await Order.findById(orderId);
+    const order = await Order.findById(extraData);
 
     if (!order) {
       return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
@@ -134,9 +135,6 @@ router.post("/callback", async (req, res) => {
           order.items,
           amount
       );
-      global.io.to(order.userId).emit("payment", {resultCode : 0});
-    }else {
-      global.io.to(order.userId).emit("payment", {resultCode : 1});
     }
     return res.status(200).json({ message: "OK", payment: newPayment });
   } catch (e) {

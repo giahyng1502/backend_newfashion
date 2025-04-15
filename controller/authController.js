@@ -27,22 +27,39 @@ exports.forgotPassword = async (req, res) => {
         res.status(500).json({ message: "Lỗi gửi OTP", error: error.message });
     }
 };
-exports.verifyOTP = async (req, res) => {
+    exports.verifyOTP = async (req, res) => {
     try {
-        const { email, otp } = req.body;
-        console.log(email)
-        const validOTP = await OTP.findOne({ email, otp });
+        const { email, otp, password } = req.body;
+        const normalizedEmail = email.toLowerCase().trim();
 
-        if (!validOTP) return res.status(400).json({ message: "Mã OTP không hợp lệ hoặc đã hết hạn" });
+        const validOTP = await OTP.findOne({ email: normalizedEmail, otp });
 
-        // Xóa OTP sau khi xác thực
-        await OTP.deleteOne({ _id: validOTP._id });
+        if (!validOTP) {
+            return res.status(400).json({ message: "Mã OTP không hợp lệ hoặc đã hết hạn" });
+        }
 
-        res.json({ message: "Xác thực thành công! Bạn có thể đặt lại mật khẩu." });
+        // Mã hóa mật khẩu
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const updateUser = await User.findOneAndUpdate(
+            { email: normalizedEmail },
+            { password: hashedPassword },
+            { new: true }
+        );
+
+        if (updateUser) {
+            await OTP.deleteOne({ _id: validOTP._id });
+            return res.json({ message: "Đặt lại mật khẩu thành công" });
+        } else {
+            return res.status(404).json({ message: "Không tìm thấy người dùng" });
+        }
+
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: "Lỗi xác thực OTP", error: error.message });
     }
 };
+
 
 
 exports.resetPassword = async (req, res) => {
