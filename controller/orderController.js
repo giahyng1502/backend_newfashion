@@ -6,6 +6,7 @@ const {Product} = require("../models/productModel");
 const generateOrderCode = require("../lib/generateCode");
 const Notify = require("../models/notificationModel");
 const {Order} = require("../models/orderModel");
+const {sendNotificationToUser} = require("../firebase/pushNotification");
 const allowedStatus = [0, 1, 2, 3, 4, 5];
 const orderController = {
     create: async (req, res) => {
@@ -357,7 +358,6 @@ const orderController = {
                 await User.findByIdAndUpdate(orderStatus.userId, {
                     $inc: { point: rewardPoints }
                 });
-                console.log('cdsiahc')
             }
             const messages = {
                 0: `Đơn hàng đang chờ xác nhận.`,
@@ -368,6 +368,7 @@ const orderController = {
                 5: `Đơn hàng đã được hoàn lại.`,
             };
             const product = await Product.findById(orderStatus.items[0].productId);
+
             const notification = new Notify({
                 userId : orderStatus.userId,
                 orderId : orderId,
@@ -375,8 +376,15 @@ const orderController = {
                 image : product?.image[0],
                 message : messages[status]
             });
-            const newNotify = await notification.save();
-            global.io.to(orderStatus.userId.toString()).emit("orderStatusUpdate", newNotify);
+            await notification.save();
+
+            const data = {
+                userId: orderStatus.userId,
+                title : 'Thông báo đơn hàng',
+                body: messages[status]
+            }
+
+            await sendNotificationToUser(data)
             return res.status(200).json({ message: "Cập nhật đơn hàng thành công", data: orderStatus });
         } catch (e) {
             console.error("Lỗi xảy ra khi cập nhật trạng thái đơn hàng: " + e.message);

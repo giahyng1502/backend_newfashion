@@ -26,6 +26,8 @@ router.post('/login',UserController.login);
 
 router.post('/loginWithGoogle',UserController.loginWithGoogle);
 
+router.post('/saveDevice',userMiddle,UserController.saveDeviceToken);
+
 router.put('/update',userMiddle,upload.array('files',1),UserController.updateUser);
 
 module.exports = router;

@@ -16,7 +16,7 @@ router.post("/payment", async function (req, res, next) {
   const partnerCode = "MOMO";
   ///redicectUrl : khi thanh toan thanh cong se chuyen den trang do
   const redirectUrl = "newfashion--android://orderdone";
-  const ipnUrl = "https://0928-58-186-78-252.ngrok-free.app/momo/callback";
+  const ipnUrl = "https://api.hungcy.id.vn/momo/callback";
   const requestType = "payWithMethod";
   const amount = priceProduct;
   const orderId = rawOrderId;

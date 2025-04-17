@@ -4,16 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Hoàn thiện chức năng thống kê cho admin">
+    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="update chức năng quên mật khẩu">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/UserController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/UserController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/authController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/authController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/cartController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/cartController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/messageController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/messageController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/orderController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/orderController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/socketConfig.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/socketConfig.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/cartModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/cartModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/momoRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/momoRouter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/firebase/pushNotification.js" beforeDir="false" afterPath="$PROJECT_DIR$/firebase/pushNotification.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/firebase/serviceAccountKey.json" beforeDir="false" afterPath="$PROJECT_DIR$/firebase/serviceAccountKey.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/notificationRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/notificationRouter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,7 +134,7 @@
       <workItem from="1744136019376" duration="961000" />
       <workItem from="1744256345397" duration="14495000" />
       <workItem from="1744437814870" duration="18524000" />
-      <workItem from="1744687942389" duration="1926000" />
+      <workItem from="1744687942389" duration="22866000" />
     </task>
     <task id="LOCAL-00001" summary="Hoàn thiện chức năng thêm , cập nhập sản phẩm , và review sản phẩm">
       <option name="closed" value="true" />
@@ -394,14 +392,21 @@
       <option name="project" value="LOCAL" />
       <updated>1744270245924</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="update chức năng quên mật khẩu">
+      <option name="closed" value="true" />
+      <created>1744689995733</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1744689995733</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="hoàn thiện chức năng CRUD category" />
     <MESSAGE value="hoàn thiện chức năng gửi tin nhắn về mail khi người dùng mua hàng và thêm chức năng quên mật khẩu bằng mail code" />
     <MESSAGE value="Cập nhập chức năng khi sản phẩm hết thời gian khuyến mãi sẽ tự xóa khỏi list SaleProduct" />
     <MESSAGE value="Hoàn thiện chức năng thanh toán bằng momo lấy link thanh toán và thanh toán và check trạng thái thanh toán" />
@@ -426,6 +431,7 @@
     <MESSAGE value="Sửa logic bài post" />
     <MESSAGE value="Thêm chức năng tìm kiếm cho đơn hàng và thêm thuộc tính mã đơn hàng" />
     <MESSAGE value="Hoàn thiện chức năng thống kê cho admin" />
-    <option name="LAST_COMMIT_MESSAGE" value="Hoàn thiện chức năng thống kê cho admin" />
+    <MESSAGE value="update chức năng quên mật khẩu" />
+    <option name="LAST_COMMIT_MESSAGE" value="update chức năng quên mật khẩu" />
   </component>
 </project>

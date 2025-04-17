@@ -1,8 +1,6 @@
 const bcrypt = require('bcryptjs');
-const {User} = require("../models/userModel");
-const {uploadImage} = require("../lib/cloudflare");
+const {User, Device} = require("../models/userModel");
 const generateJwtToken = require("../lib/generateJwtToken");
-const admin = require("../firebase/config");
 const UserController = {
     searchUsers: async (req, res) => {
         try {
@@ -259,6 +257,38 @@ const UserController = {
             return res.status(500).json({ message: err.message });
         }
     },
+
+    saveDeviceToken: async (req, res) => {
+        try {
+            const token = req.body.token;
+            const userId = req.user.userId;
+
+            if (!token) {
+                return res.status(400).json({ message: "Thiếu FCM token" });
+            }
+
+            let existing = await Device.findOne({ userId });
+
+            if (existing) {
+                if (!existing.deviceToken.includes(token)) {
+                    existing.deviceToken.push(token);
+                    await existing.save();
+                    return res.status(200).json({ message: "Đã thêm token mới" });
+                } else {
+                    return res.status(200).json({ message: "Token đã tồn tại" });
+                }
+            } else {
+                existing = new Device({ userId: userId, deviceToken: [token] });
+                await existing.save();
+                return res.status(201).json({ message: "Đã lưu token mới" });
+            }
+
+        } catch (e) {
+            console.error("Lỗi lưu device token:", e);
+            return res.status(500).json({ message: "Lỗi server", error: e.message });
+        }
+    }
+
 
 }
 module.exports = UserController;
