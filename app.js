@@ -23,6 +23,7 @@ var cloudRouter = require("./routes/cloudRouter");
 var messageRouter = require("./routes/messageRouter");
 var dashBoardRouter = require("./routes/dashboard");
 var notificationRouter = require("./routes/notificationRouter");
+var tensorRouter = require("./routes/tensorRouter");
 
 var { app } = require("./lib/socketConfig");
 var db = require("./models/db");
@@ -55,6 +56,7 @@ app.use("/upload", cloudRouter);
 app.use("/message", messageRouter);
 app.use("/dashboard", dashBoardRouter);
 app.use("/notification",notificationRouter );
+app.use("/tensor",tensorRouter );
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

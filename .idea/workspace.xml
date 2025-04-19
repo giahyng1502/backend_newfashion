@@ -4,14 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="update chức năng quên mật khẩu">
+    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Cập nhập chức năng thông báo với fcm">
+      <change afterPath="$PROJECT_DIR$/routes/tensorRouter.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/UserController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/UserController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/orderController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/orderController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/firebase/pushNotification.js" beforeDir="false" afterPath="$PROJECT_DIR$/firebase/pushNotification.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/firebase/serviceAccountKey.json" beforeDir="false" afterPath="$PROJECT_DIR$/firebase/serviceAccountKey.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/notificationRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/notificationRouter.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/productModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/productModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +56,7 @@
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;22.12.0&quot;,
     &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;22.12.0&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/DATN_LTMO&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/giahyng/Desktop/backend_newfashion/google&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -69,6 +68,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\giahyng\Desktop\backend_newfashion\google" />
       <recent name="C:\Users\giahyng\Desktop\backend_newfashion\firebase" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -134,7 +134,11 @@
       <workItem from="1744136019376" duration="961000" />
       <workItem from="1744256345397" duration="14495000" />
       <workItem from="1744437814870" duration="18524000" />
-      <workItem from="1744687942389" duration="22866000" />
+      <workItem from="1744687942389" duration="45734000" />
+      <workItem from="1744881653524" duration="2469000" />
+      <workItem from="1744884259300" duration="17645000" />
+      <workItem from="1744969691178" duration="11576000" />
+      <workItem from="1745058292575" duration="2857000" />
     </task>
     <task id="LOCAL-00001" summary="Hoàn thiện chức năng thêm , cập nhập sản phẩm , và review sản phẩm">
       <option name="closed" value="true" />
@@ -400,14 +404,21 @@
       <option name="project" value="LOCAL" />
       <updated>1744689995733</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="Cập nhập chức năng thông báo với fcm">
+      <option name="closed" value="true" />
+      <created>1744863395935</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1744863395935</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="hoàn thiện chức năng gửi tin nhắn về mail khi người dùng mua hàng và thêm chức năng quên mật khẩu bằng mail code" />
     <MESSAGE value="Cập nhập chức năng khi sản phẩm hết thời gian khuyến mãi sẽ tự xóa khỏi list SaleProduct" />
     <MESSAGE value="Hoàn thiện chức năng thanh toán bằng momo lấy link thanh toán và thanh toán và check trạng thái thanh toán" />
     <MESSAGE value="Hoàn thiện chức năng tải hình ảnh từ client lên cloudflare và nhận lại link" />
@@ -432,6 +443,7 @@
     <MESSAGE value="Thêm chức năng tìm kiếm cho đơn hàng và thêm thuộc tính mã đơn hàng" />
     <MESSAGE value="Hoàn thiện chức năng thống kê cho admin" />
     <MESSAGE value="update chức năng quên mật khẩu" />
-    <option name="LAST_COMMIT_MESSAGE" value="update chức năng quên mật khẩu" />
+    <MESSAGE value="Cập nhập chức năng thông báo với fcm" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cập nhập chức năng thông báo với fcm" />
   </component>
 </project>

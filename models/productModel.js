@@ -136,14 +136,25 @@ const productSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: "Subcategory",
   },
-  totalRating : {
-    type: Number,
-    required: true,
-    default: 0,
-  },
 }, {timestamps: true}
 );
-
+const featuresSchema = new mongoose.Schema({
+  imageFeatures: {
+    type: [
+      {
+        imageUrl: { type: String, required: true },
+        features: { type: [Number], required: true },
+      },
+    ],
+    required: false, // Trường này không bắt buộc khi tạo sản phẩm, có thể được cập nhật sau
+  },
+  productId : {
+    type: mongoose.Types.ObjectId,
+    ref: "Product",
+    required: true,
+  }
+})
 const Product = mongoose.model("Product", productSchema);
+const Features = mongoose.model("Features", featuresSchema);
 const Review = mongoose.model("Review", reviewSchema);
-module.exports = { Product, Review };
+module.exports = { Product, Review,Features };
