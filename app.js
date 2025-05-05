@@ -22,6 +22,7 @@ var momoRouter = require("./routes/momoRouter");
 var cloudRouter = require("./routes/cloudRouter");
 var messageRouter = require("./routes/messageRouter");
 var dashBoardRouter = require("./routes/dashboard");
+var bannerRouter = require("./routes/bannerRouter");
 var notificationRouter = require("./routes/notificationRouter");
 var tensorRouter = require("./routes/tensorRouter");
 
@@ -57,6 +58,7 @@ app.use("/message", messageRouter);
 app.use("/dashboard", dashBoardRouter);
 app.use("/notification",notificationRouter );
 app.use("/tensor",tensorRouter );
+app.use("/banner",bannerRouter );
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

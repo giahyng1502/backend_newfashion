@@ -4,13 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Cập nhập chức năng thông báo với fcm">
-      <change afterPath="$PROJECT_DIR$/routes/tensorRouter.js" afterDir="false" />
+    <list default="true" id="2368a31f-3bef-42e0-b3ec-81735d1dfe84" name="Changes" comment="Hoàn thiện chức năng tìm kiếm sản phẩm bằng hình ảnh">
+      <change afterPath="$PROJECT_DIR$/controller/bannerController.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/bannerModel.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/bannerRouter.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/productModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/productModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/doashboardController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/doashboardController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/category.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/category.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/post.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/post.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/product.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/product.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/subCategoryRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/subCategoryRouter.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,6 +143,13 @@
       <workItem from="1744884259300" duration="17645000" />
       <workItem from="1744969691178" duration="11576000" />
       <workItem from="1745058292575" duration="2857000" />
+      <workItem from="1745062405667" duration="1120000" />
+      <workItem from="1745148922252" duration="1883000" />
+      <workItem from="1745162865813" duration="178000" />
+      <workItem from="1745464252693" duration="2157000" />
+      <workItem from="1745653056942" duration="15000" />
+      <workItem from="1746275990964" duration="5097000" />
+      <workItem from="1746369073062" duration="1012000" />
     </task>
     <task id="LOCAL-00001" summary="Hoàn thiện chức năng thêm , cập nhập sản phẩm , và review sản phẩm">
       <option name="closed" value="true" />
@@ -412,14 +423,21 @@
       <option name="project" value="LOCAL" />
       <updated>1744863395935</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="Hoàn thiện chức năng tìm kiếm sản phẩm bằng hình ảnh">
+      <option name="closed" value="true" />
+      <created>1745062514144</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1745062514144</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Cập nhập chức năng khi sản phẩm hết thời gian khuyến mãi sẽ tự xóa khỏi list SaleProduct" />
     <MESSAGE value="Hoàn thiện chức năng thanh toán bằng momo lấy link thanh toán và thanh toán và check trạng thái thanh toán" />
     <MESSAGE value="Hoàn thiện chức năng tải hình ảnh từ client lên cloudflare và nhận lại link" />
     <MESSAGE value="Thêm thuộc tính subCategory vào category hoàn thiện chức năng crud của subcategory" />
@@ -444,6 +462,7 @@
     <MESSAGE value="Hoàn thiện chức năng thống kê cho admin" />
     <MESSAGE value="update chức năng quên mật khẩu" />
     <MESSAGE value="Cập nhập chức năng thông báo với fcm" />
-    <option name="LAST_COMMIT_MESSAGE" value="Cập nhập chức năng thông báo với fcm" />
+    <MESSAGE value="Hoàn thiện chức năng tìm kiếm sản phẩm bằng hình ảnh" />
+    <option name="LAST_COMMIT_MESSAGE" value="Hoàn thiện chức năng tìm kiếm sản phẩm bằng hình ảnh" />
   </component>
 </project>

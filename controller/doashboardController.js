@@ -99,32 +99,42 @@ const dashboardController = {
     },
     getOrderStats: async (req, res) => {
         try {
-            const { time } = req.query; // Nhận tham số từ query string
+            const { time } = req.query;
 
-            let startDate;
-            if (time === "today") startDate = moment().startOf("day");
-            else if (time === "week") startDate = moment().startOf("isoWeek");
-            else if (time === "month") startDate = moment().startOf("month");
-            else if (time === "year") startDate = moment().startOf("year");
+            let startDate, endDate;
+            if (time === "today") {
+                startDate = moment().startOf("day");
+                endDate = moment().endOf("day");
+            } else if (time === "week") {
+                startDate = moment().startOf("isoWeek");
+                endDate = moment().endOf("isoWeek");
+            } else if (time === "month") {
+                startDate = moment().startOf("month");
+                endDate = moment().endOf("month");
+            } else if (time === "year") {
+                startDate = moment().startOf("year");
+                endDate = moment().endOf("year");
+            }
 
-            const matchCondition = startDate ? { dateCreated: { $gte: startDate.toDate() } } : {};
+            const matchCondition = startDate
+                ? { dateCreated: { $gte: startDate.toDate(), $lte: endDate.toDate() } }
+                : {};
 
-            // 📊 Truy vấn tổng số đơn hàng theo trạng thái
             const orderStats = await Order.aggregate([
                 { $match: matchCondition },
                 { $group: { _id: "$status", total: { $sum: 1 } } },
             ]);
-
-            // 🎯 Định dạng dữ liệu trả về
+            console.log(orderStats);
             const stats = {
-                pending: orderStats.find((o) => o._id === 0)?.total || 0, // Chờ xác nhận
-                shipping: orderStats.find((o) => o._id === 2)?.total || 0, // Đang vận chuyển
-                delivered: orderStats.find((o) => o._id === 3)?.total || 0, // Giao thành công
-                canceled: orderStats.find((o) => o._id === 4)?.total || 0, // Hủy đơn hàng
-                returned: orderStats.find((o) => o._id === 5)?.total || 0, // Hoàn đơn hàng
+                pending: orderStats.find((o) => o._id === 0)?.total || 0,
+                confirmed: orderStats.find((o) => o._id === 1)?.total || 0,
+                shipping: orderStats.find((o) => o._id === 2)?.total || 0,
+                delivered: orderStats.find((o) => o._id === 3)?.total || 0,
+                canceled: orderStats.find((o) => o._id === 4)?.total || 0,
+                returned: orderStats.find((o) => o._id === 5)?.total || 0,
+                waitingPayment: orderStats.find((o) => o._id === 6)?.total || 0,
             };
 
-            // 📈 Tính tỷ lệ đơn hàng thành công & hủy đơn
             const totalOrders = Object.values(stats).reduce((sum, value) => sum + value, 0);
             const successRate = totalOrders > 0 ? ((stats.delivered / totalOrders) * 100).toFixed(2) + "%" : "0%";
             const cancelRate = totalOrders > 0 ? ((stats.canceled / totalOrders) * 100).toFixed(2) + "%" : "0%";
@@ -140,14 +150,35 @@ const dashboardController = {
             return res.status(500).json({ message: "Lỗi server", error: error.message });
         }
     },
-
-     getTopSellingProducts : async (req, res) => {
+    getTopSellingProducts: async (req, res) => {
         try {
+            const { time } = req.query;
+            const now = new Date();
+
+            let dateFilter = {};
+
+            if (time === "day") {
+                const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+                dateFilter = { dateCreated: { $gte: start, $lt: end } };
+            } else if (time === "month") {
+                const start = new Date(now.getFullYear(), now.getMonth(), 1);
+                const end = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+                dateFilter = { dateCreated: { $gte: start, $lt: end } };
+            } else if (time === "year") {
+                const start = new Date(now.getFullYear(), 0, 1);
+                const end = new Date(now.getFullYear() + 1, 0, 1);
+                dateFilter = { dateCreated: { $gte: start, $lt: end } };
+            } else if (time) {
+                return res.status(400).json({ message: "Giá trị 'time' không hợp lệ (chỉ nhận: day, month, year hoặc không truyền gì)" });
+            }
+
             const result = await Order.aggregate([
-                { $unwind: "$items" }, // Tách từng sản phẩm
+                { $unwind: "$items" },
                 {
                     $match: {
-                        status: 3 // Chỉ lấy đơn hàng đã giao thành công
+                        status: 3,
+                        ...dateFilter
                     }
                 },
                 {
@@ -158,7 +189,7 @@ const dashboardController = {
                     }
                 },
                 { $sort: { totalQuantitySold: -1 } },
-                { $limit: 5 },
+                { $limit: 10 },
                 {
                     $lookup: {
                         from: "products",
@@ -167,9 +198,7 @@ const dashboardController = {
                         as: "product"
                     }
                 },
-                {
-                    $unwind: "$product"
-                },
+                { $unwind: "$product" },
                 {
                     $project: {
                         _id: 0,
@@ -183,8 +212,10 @@ const dashboardController = {
             ]);
 
             return res.status(200).json({
+                time: time || "all",
                 topProducts: result
             });
+
         } catch (err) {
             return res.status(500).json({
                 message: "Server Error",
